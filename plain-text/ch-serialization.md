@@ -241,6 +241,56 @@ However, in order to know this required-bytes for each attribute union children 
 
 Here I will skip the `dfs_save()` method since it is exactly the same as described above and I will only provide the 1st pass algorithm that gathers statistics.
 
+```
+//
+// @attribute_info: this is used in the method below and is a field of the Byte Serializer class
+//
+// @node: the node to start gathering statistics (initially the factorization root)
+// @fTree: the factorization tree of the representation
+void dfs_statistics(FRepNode *node, FactorizationTree *fTree) {
+    Operation *op = (Operation*)node;
+
+    if (is_multiplication(op)) {
+        // multiplication nodes children are unions so just recurse on them
+        for each child union CU in op->children {
+            dfs_statistics(CU, fTree);
+        }
+    } else {
+        // check if the current attribute required-bytes need to be updated
+        
+        // check children counts
+        children_bytes = required_bytes(op->childrenCount);
+        if (attribute_info[op->attributeID].required_union_bytes < children_bytes)
+            attribute_info[op->attributeID].required_union_bytes = children_bytes;
+            
+        // check value bytes
+        for each child value CV in op->children {
+            val_bytes = required_bytes(CV);
+            if (attribute_info[op->attributeID].required_value_bytes < val_bytes)
+                attribute_info[op->attributeID].required_value_bytes = val_bytes;
+
+            // recurse if this is not a leaf attribute in the f-tree
+            if (!is_leaf_attribute(fTree, op->attributeID)) {
+                dfs_statistics(CV, fTree);
+            }
+        } // end for each child value
+    }
+}
+```
+
+The statistics gathering is pretty straight-forward. We do a DFS-traversal on the factorization and whenever we are at a union node we update the required bytes for the number of children and for the values of that specific attribute represented by that union node.
+
+In the pseudocode above *attribute_info* is a field of the Byte Serializer class and its type is as following:
+
+```
+struct AttrInfo {
+    uint8_t required_value_bytes;
+    uint8_t required_union_bytes;
+}
+```
+
+which as I mentioned before represents the header for each attribute that is written before the actual factorization serialization.
+
 
 **Byte Deserializer**
 
