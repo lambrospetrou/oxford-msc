@@ -1,15 +1,15 @@
 
 # Table of Contents
 
-## Introduction
+* Introduction
 
-## Background (just briefly mention previous work ???)
+* Background (just briefly mention previous work ???)
 
-##Finding good Factorization trees (COST function)
+* Finding good Factorization trees (COST function)
     - COST function idea and algorithm
     - estimates calculation algorithm
 
-## Serialization of Factorized representation
+* Serialization of Factorized representation
     - Boost
     - Simple Serializer (Binary)
     - Byte Serializer (required bytes only)
@@ -17,7 +17,7 @@
         * Bitstream implementation
     - Bit Serializer HyperCube (Bit Serializer extended with HyperCube filtering)
 
-## Distributed system
+* Distributed system
     - Single round vs Multi round (they have the same issues)
         * Multi round is like a repeat execution of Single round but for a subset of the query
         * emphasize that the f-plans in each round can be anything and the distribution of data is done on 1 attribute at a time (but can easily be extended)
@@ -33,14 +33,14 @@
         * repeat if in Multi round execution
     - describe dist\_settings.conf and dist\_query.conf files
 
-## Experiments
+* Experiments
     - COST function (traverse some f-trees in housing-1..8)
     - Compression with serialization on housing-1..15
         * GZIP, BZIP2 min max, NONE on Serializers vs GZIP, BZIP2, NONE on FLAT 
     - Communication cost 
     - End-to-End Computation time (centralized FDB vs nodes 4, nodes 6, nodes 8)
 
-## Future Work
+* Future Work
     - Extension to the Bit serializer to provide custom serializer for certain data types (negative numbers, doubles, strings) to allow further compression
     - Concurrency added to the serialization should be trivial since each branch of the root attribute can be serialized in parallel and then just stored in order
     - A lot of proposals regarding the communication during the execution of the distributed query
