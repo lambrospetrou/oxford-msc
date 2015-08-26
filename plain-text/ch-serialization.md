@@ -12,12 +12,16 @@ An important aspect of serialization and deserialization is that it has to be ef
 
 In this section I will describe the different approaches I have taken for the serialization leading to the final version used in the distributed system.
 
+```
 //////////////////////////////////////////////
 <IMAGE_OF_A_FACTORIZATION_TREE_HERE>
 /////////////////////////////////////////////
+```
+```
 //////////////////////////////////////////////
 <IMAGE_OF_A_REPRESENTATION_HERE_FOR_THE_TREE>
 /////////////////////////////////////////////
+```
 
 ### Factorization Tree serialization
 
@@ -72,6 +76,7 @@ Now you can imagine that the serialization of a factorization is just a sequence
 
 **Simple Serializer**
 
+```
 // @node: the starting node of our serialization (usually the root of the representation)
 // @fTree: the Factorization Tree to be used as guide 
 // @out: the outpout stream into which we will write the serialization (can be file, socket, memory stream, etc.)
@@ -102,6 +107,7 @@ dfs_save(FRepNode \*node, FactorizationTree \*fTree, ostream \*out) {
         }
     }
 }
+```
 
 Simple serializer extends a DFS traversal on the representation. I just want to mention that we iterate over the values twice since we want to serialize _all_ the values of a union completely and _then_ move on to the next union, like in an in-order traversal!
 
