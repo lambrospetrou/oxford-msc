@@ -11,7 +11,7 @@ An important aspect of serialization and deserialization is that it has to be ef
 
 The contributions made to the project out of this chapter are four (4) serialization techniques for Data Factorizations and one (1) serialization technique for Factorization Trees, namely:
 
-1. Factorization Tree (de)serializer - this is the only serialization technique for f-trees and is used in conjuction any of the above methods
+1. Factorization Tree (de)serializer - this is the only serialization technique for f-trees and is used in conjuction any of the factorization serialization techniques
 2. Simple (De)Serializer - a simple serialization technique that is fast and retains the compression factor over flat representations
 3. Byte (De)Serializer - an extension to the Simple serialization technique to only store the required number of bytes for each value
 4. Bit (De)Serializer - a further extension to Byte serialization to only store the required number of bits for each value, with specialized methods that can be extended in the future to better support more values to allow better compression
@@ -98,7 +98,7 @@ Apart from the above observations, the trick that led to this serialization meth
 
 The problem with generic serialization techniques, like _Boost_ described above is that all information goes into the serialized outcome to allow correct deserialization. We can avoid this overhead in our case since we know the special structure of the factorization and therefore we can use the f-tree to infer the structure of the representation and load the values from the serialized form as we go along during deserialization.
 
-#### Main Idea
+#### Idea
 
 The main idea of **Simple Serializer** is that we traverse the f-representation in a DFS (Depth-First-Search) order and every time we find a _Union_ node we serialize it, then continue.
 The serialization of a union node is extremely simple and just contains a number N indicating the number of values in that specific union, followed by N values of the attribute represented by that union.
@@ -322,6 +322,8 @@ This serialization technique requires bit-level precision when reading and writi
 Therefore, in order to provide this functionality I implemented custom input and output streams (_obitstream_ and _ibitstream_) that are used upon the underlying standard binary byte streams and use those in the Bit Serializer and Bit Deserializer. These custom bit streams basically allow me for a given value to write only certain bits of its memory representation and respectively can read a certain number of bits from an input stream  and reinterpret them as a data type in memory.
 
 Briefly, the way I do this is that I use a buffer of bytes in memory to write and read from certain amount of bits. Whenever the bytes available in the buffer are insufficient to satisfy a read operation I refill the internal buffer by reading from the underlying input stream. Whenever the internal buffer fills (or at user's request) I flush the internal buffer to the underlying output stream. Therefore, my implementation of bit streams work upon the underlying standard binary streams of C++ and use buffers to handle the required read and write operations.
+
+In addition, an important feature that makes this serializer great is that in the future we could provide specialized read/write methods for certain data types (floats, doubles, strings) and further increase compression without adding processing overhead by applying compression algorithms. The current implementation of bit streams heavily uses C++ templates therefore this extension should be trivial to implement in a future project.
 
 I am not going to provide any code here but you can find the source code in the project's repository.
 
