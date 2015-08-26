@@ -9,7 +9,13 @@ An important aspect of serialization and deserialization is that it has to be ef
 
 ## Contributions
 
-// **TODO** 
+The contributions made to the project out of this chapter are the following:
+1. Simple (De)Serializer - a simple serialization technique that is fast and retains the compression factor over flat representations
+2. Byte (De)Serializer - an extension to the Simple serialization technique to only store the required number of bytes for each value
+3. Bit (De)Serializer - a further extension to Byte serialization to only store the required number of bits for each value, with specialized methods that can be extended in the future to better support more values to allow better compression
+4. Bit Serializer HyperCube - the serialization technique that is used in the distributed system which differs from the normal Bit Serializer in that it does not ship all the values of a union but only those that should be shipped based on the Dimensions ID given.
+
+I do not consider the Boost serialization technique as a contribution since it was an experiment that failed and later removed completely from the source code!
 
 ## Factorization Serialization
 
