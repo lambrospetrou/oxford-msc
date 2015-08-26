@@ -19,6 +19,10 @@ In this section I will describe the different approaches I have taken for the se
 <IMAGE_OF_A_REPRESENTATION_HERE_FOR_THE_TREE>
 /////////////////////////////////////////////
 
+### Factorization Tree serialization
+
+// **TODO**
+
 ### Boost Serialization
 
 As a first attempt to provide serialization/deserialization I decided to use **Boost::Serialization** library since it gathered high reviews in the online community and since I was already using _Boost_ for the networking modules of the system it seemed to be a great fit. 
@@ -62,10 +66,44 @@ It is important to mention that I use **binary** read and write methods during s
 
 Now you can imagine that the serialization of a factorization is just a sequence of _children counts_ followed by the corresponding values. As I said, the important benefit of this serialization is that I just store the absolute minimum information required to recover the representation.
 
+**Simple Serializer** assumes that we already deserialized the Factorization Tree (discussed previously) and we can use it to infer the structure of the representation.
+
 #### Algorithms
 
+**Simple Serializer**
 
+// @node: the starting node of our serialization (usually the root of the representation)
+// @fTree: the Factorization Tree to be used as guide 
+// @out: the outpout stream into which we will write the serialization (can be file, socket, memory stream, etc.)
+dfs_save(FRepNode \*node, FactorizationTree \*fTree, ostream \*out) {
+    Operation \*op = (Operation\*)node; 
+    
+    if (is_multiplication(op)) {
+        // in multiplication nodes we just recurse without serializing 
+        for each child attribute CA in op->children {
+            dfs_save(CA, fTree, out);
+        }
+    } else if (is_union(op)) {
+        // in union we serialize the number of children and values
+        
+        // serialize children count
+        write_binary(out, op->childrenCount);
+        
+        // serialize values
+        for each child value V in op->children {
+            write_binary(out, V);
+        }
 
+        // recurse only if not leaf nodes
+        if (!is_leaf_attribute(fTree, node->attributeID)) {
+            for each child value CV in op->children {
+                dfs_save(CV, fTree, out);
+            }
+        }
+    }
+}
+
+Simple serializer extends a DFS traversal on the representation. I just want to mention that we iterate over the values twice since we want to serialize _all_ the values of a union completely and _then_ move on to the next union, like in an in-order traversal!
 
 
 
