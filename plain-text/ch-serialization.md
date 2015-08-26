@@ -1,12 +1,15 @@
-# Serialization of Factorized Representations
+# Serialization of Data Factorizations
 
 ## Motivation
 
-A very important part of the project investigated ways to serialize, and possibly compress, f-representations (factorizations). It is very important to support serialization and deserialization of a factrorization both in a centralized setting and in a distributed setting. For example, sometimes we want to save an instance of a database on disk to manipulate and further process it later. In some other cases we want to ship data over the wire to neighboring PC nodes which need the data for additional processing on their side. 
+A very important part of the project investigated ways to serialize, and possibly compress, factorizations (f-representations). It is very important to support serialization and deserialization of a factorization both in a centralized setting and in a distributed setting. For example, sometimes we want to save an instance of a database on disk to manipulate and further process it later. In some other cases we want to ship data over the wire to neighboring PC nodes which need the data for additional processing on their side. 
 
 In general, serialization is the method of efficiently converting an in-memory factorization into a series of bytes which is stored or transferred and later can be deserialized into the exact source factorization.
-An important aspect of serialization and deserialization is that it has to be efficient in both time and space since we want to retain the major benefit of f-representations, which is the compressed size compared to corresponding flat representation. Thus, having a bad serialization that would take a lot of space or requiring a lot of time to process would be inappropriate for our setting, especially the distributed system which is the goal of this thesis.
+An important aspect of serialization and deserialization is that it has to be efficient in both processing time and space (output size) since we want to retain the major benefit of factorizations, which is the compressed size compared to corresponding flat representations. Thus, having a serialization that would take a lot of space or requiring a lot of time to process would be inappropriate for our setting, especially the distributed system which is the goal of this thesis.
 
+## Contributions
+
+// **TODO** 
 
 ## Serialization attempts
 
@@ -29,13 +32,13 @@ In this section I will describe the different approaches I have taken for the se
 
 ### Boost Serialization
 
-As a first attempt to provide serialization/deserialization I decided to use **Boost::Serialization** library since it gathered high reviews in the online community and since I was already using _Boost_ for the networking modules of the system it seemed to be a great fit. 
-The purpose of _Boost::Serialization_ library is to allow developers to provide an easy way to add serialization to their **existing** data structures without writing a lot of boilerplate code since it can be described more or less like a memory dump of the structure into a stream, which can be anything from a file, to a socket, etc.
+As a first attempt to provide serialization/deserialization I decided to use **Boost::Serialization** library since it gathered high rating reviews among the online community and since I was already using _Boost_ for the networking modules of the system it seemed to be a great fit. 
+The purpose of _Boost::Serialization_ library is to allow developers to provide an easy way to add serialization to their **existing** data structures without writing a lot of boilerplate code since it can be described more or less like a memory dump of a data structure into a stream, which can be anything from a file, to a socket, etc.
 
-The integration of the library in FDB and the actual implementation was pretty straightforward and was done in a few days, since I just had to add couple of _special_ methods in each class required to be serialized according to certain library rules. However, the end result was really bad.
+The integration of the library in FDB and the actual implementation was pretty straightforward and was done in a few days, since I just had to add couple of _special_ methods in each class required to be serialized according to certain library rules. However, the end result was really bad and disappointing.
 
-As I mentioned, this is more like a memory dump of the structure, including any pointers and their destination objects, in order to easily allow the deserializer to create the exact data structure. The caveat here is that the existing _FDB_ implementation is **very bad**! I really can't emphasize this enough. 
-The current data structure of an f-representation has a lot of overhead, including many unneccessary fields, keeping all the values of a Union for example as a Double-Linked-List thus introducing excessive amount of pointers and many more. As a result, the serialization module was dumping everything, more importantly the pointers structure, to allow recreation during deserialization leading to a bloated outcome, both in terms of raw size in bytes but also in long serialization times. 
+As I mentioned, this is more like a memory dump of the structure, including any pointers and their destination objects, in order to easily allow the deserializer to create the exact data structure. The major problem here and the reason of the bloated serialized output is that the existing _FDB_ implementation is not as space-efficient as it should be and that overhead is transferred into the serialization. 
+The current data structure of an f-representation has a lot of overhead, including many unneccessary fields, keeping all the values of a Union for example as a Double-Linked-List thus introducing excessive amount of pointers and many more. As a result, the serialization module was dumping everything, more importantly the pointer references, to allow re-creation during deserialization leading to a bloated outcome, both in terms of raw size in bytes but also in long serialization times. 
 
 In my first preliminary experiments the serialized representation was almost the same size as the flat-relational representation, thus completely eliminating the compression factor of FDB over flat databases, which was unacceptable!
 
@@ -68,18 +71,18 @@ For example, if a specific union of attribute A (of type _int_) has the values [
 
 It is important to mention that I use **binary** read and write methods during serialization and deserialization and for each children count I use 32-bit unsigned integer values whereas for the actual values I use the corresponding number of bytes required for that attribute data type (i.e. _double_ = sizeof(double) = 8 bytes).
 
-Now you can imagine that the serialization of a factorization is just a sequence of _children counts_ followed by the corresponding values. As I said, the important benefit of this serialization is that I just store the absolute minimum information required to recover the representation.
+The serialization of a factorization is just a sequence of _children counts_ followed by their corresponding values. As I said, the important benefit of this serialization technique is that I just store the absolute minimum information required to recover the representation.
 
-**Simple Serializer** assumes that we already deserialized the Factorization Tree (discussed previously) and we can use it to infer the structure of the representation.
+Moreover, **Simple Serializer** assumes that we already deserialized the Factorization Tree (discussed previously) and we can use it to infer the structure of the representation.
 
 #### Algorithms
 
 **Simple Serializer**
 
 ```
-// @node: the starting node of our serialization (usually the root of the representation)
-// @fTree: the Factorization Tree to be used as guide 
-// @out: the outpout stream into which we will write the serialization (can be file, socket, memory stream, etc.)
+// @node: the starting node of our serialization (usually the root of the factorization)
+// @fTree: the factorization tree to be used as guide 
+// @out: the outpout stream to write the serialization (file, socket, memory stream, etc.)
 dfs_save(FRepNode *node, FactorizationTree *fTree, ostream *out) {
     Operation *op = (Operation*)node; 
     
@@ -91,15 +94,15 @@ dfs_save(FRepNode *node, FactorizationTree *fTree, ostream *out) {
     } else if (is_union(op)) {
         // in union we serialize the number of children and values
         
-        // serialize children count
+        // serialize union children count
         write_binary(out, op->childrenCount);
         
-        // serialize values
+        // serialize union values
         for each child value V in op->children {
             write_binary(out, V);
         }
 
-        // recurse only if not leaf nodes
+        // recurse only if the union's attribute is not leaf in the f-tree
         if (!is_leaf_attribute(fTree, node->attributeID)) {
             for each child value CV in op->children {
                 dfs_save(CV, fTree, out);
@@ -109,7 +112,9 @@ dfs_save(FRepNode *node, FactorizationTree *fTree, ostream *out) {
 }
 ```
 
-Simple serializer extends a DFS traversal on the representation. I just want to mention that we iterate over the values twice since we want to serialize _all_ the values of a union completely and _then_ move on to the next union, like in an in-order traversal!
+_Simple Serializer_ is an extension of the well-known DFS traversal algorithm with in-order value processing. 
+The representation has two types of nodes, thus leading to two different treatments in serialization. When a _multiplication_ node is encountered the algorithm recurses on its descendants without serializing anything since the multiplication information can be inferred from the f-tree. When a _union_ node is encountered we first serialize the number of values in that union, followed by the serialization of all the values. At the end we recurse on each of child to complete the DFS-traversal.
+I want to mention that we iterate over the values twice since we want to serialize _all_ the values of a union completely and _then_ move on to the next union, like in an in-order traversal.
 
 
 
