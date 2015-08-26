@@ -10,7 +10,14 @@ An important aspect of serialization and deserialization is that it has to be ef
 
 ## Serialization attempts
 
-In this section I will describe the different approaches I have taken for the serialization up to the final version used in the distributed system.
+In this section I will describe the different approaches I have taken for the serialization leading to the final version used in the distributed system.
+
+//////////////////////////////////////////////
+<IMAGE_OF_A_FACTORIZATION_TREE_HERE>
+/////////////////////////////////////////////
+//////////////////////////////////////////////
+<IMAGE_OF_A_REPRESENTATION_HERE_FOR_THE_TREE>
+/////////////////////////////////////////////
 
 ### Boost Serialization
 
@@ -30,6 +37,42 @@ It didn't worth it since still there was going to be some overhead added by Boos
 My **first attempt failed** but led to some interesting observations. Although the current implementation was poorly done, a good serialization does not need all that information and we could also take advantage of the special structure of a factorization to make it as succinct as possible.
 
 ### Simple Binary Serializer
+
+Before going into details for this serialization technique I want to state some observations made clear after my serialization version.
+
+* Each f-representation is strictly associated with a factorization tree (f-tree) that defines its structure
+* The main types of a node in a factorization are the Multiplication (cross product) and the Summation (union) node types
+* The values inside a union node can be stored in continuous memory, thus avoiding the excessive overhead of Double-Linked-Lists due to the pointers for each value
+
+Apart from the above observations, the trick that led to this serialization method is that the only nodes required to be serialized are **Union** nodes along with their values. Since each factorization strictly follows an f-tree, it seemed obvious and very beneficial for me to use the f-tree as a guide during serialization and deserialization leading to a more succint outcome which just contains the absolute minimum of information, _the values_!
+
+The problem with generic serialization techniques, like _Boost_ described above is that all information goes into the serialized outcome to allow correct deserialization. We can avoid this overhead in our case since we know the special structure of the factorization and therefore we can use the f-tree to infer the structure of the representation and load the values from the serialized form as we go along during deserialization.
+
+#### Main Idea
+
+The main idea of **Simple Serializer** is that we traverse the f-representation in a DFS (Depth-First-Search) order and every time we find a _Union_ node we serialize it, then continue.
+The serialization of a union node is extremely simple and just contains a number N indicating the number of values in that specific union, followed by N values of the attribute represented by that union.
+
+For example, if a specific union of attribute A (of type _int_) has the values [3, 6, 7, 8, 123, 349], its serialization would be:
+```
+6 3 6 7 8 123 349
+```
+
+It is important to mention that I use **binary** read and write methods during serialization and deserialization and for each children count I use 32-bit unsigned integer values whereas for the actual values I use the corresponding number of bytes required for that attribute data type (i.e. _double_ = sizeof(double) = 8 bytes).
+
+Now you can imagine that the serialization of a factorization is just a sequence of _children counts_ followed by the corresponding values. As I said, the important benefit of this serialization is that I just store the absolute minimum information required to recover the representation.
+
+#### Algorithms
+
+
+
+
+
+
+
+
+
+
 
 
 
