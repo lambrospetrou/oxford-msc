@@ -108,7 +108,7 @@ For example, if a specific union of attribute A (of type _int_) has the values [
 6 3 6 7 8 123 349
 ```
 
-It is important to mention that I use **binary** read and write methods during serialization and deserialization and for each children count I use 32-bit unsigned integer values whereas for the actual values I use the corresponding number of bytes required for that attribute data type (i.e. _double_ = sizeof(double) = 8 bytes).
+It is important to mention that I use **Binary** read and write methods during serialization and deserialization and for each children count I use 32-bit unsigned integer values whereas for the actual values I use the corresponding number of bytes required for that attribute data type (i.e. _double_ = sizeof(double) = 8 bytes).
 
 The serialization of a factorization is just a sequence of _children counts_ followed by their corresponding values. As I said, the important benefit of this serialization technique is that I just store the absolute minimum information required to recover the representation.
 
