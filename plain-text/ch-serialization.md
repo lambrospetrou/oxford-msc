@@ -80,8 +80,8 @@ Now you can imagine that the serialization of a factorization is just a sequence
 // @node: the starting node of our serialization (usually the root of the representation)
 // @fTree: the Factorization Tree to be used as guide 
 // @out: the outpout stream into which we will write the serialization (can be file, socket, memory stream, etc.)
-dfs_save(FRepNode \*node, FactorizationTree \*fTree, ostream \*out) {
-    Operation \*op = (Operation\*)node; 
+dfs_save(FRepNode *node, FactorizationTree *fTree, ostream *out) {
+    Operation *op = (Operation*)node; 
     
     if (is_multiplication(op)) {
         // in multiplication nodes we just recurse without serializing 
