@@ -315,3 +315,22 @@ I want to emphasize that serialization is different than compression and that th
 
 The algorithms are identical to those of _Byte Serializer_ and _Byte Deserializer_ with the exception that instead of using the `required_bytes()` method it uses the `required_bits()` method to only write the specific bits required to the output stream.
 
+#### Bit Stream
+
+This serialization technique requires bit-level precision when reading and writing values, but as we know all system calls and existing functionality provided by the standard libraries work at byte-level precision.
+
+Therefore, in order to provide this functionality I implemented custom input and output streams (_obitstream_ and _ibitstream_) that are used upon the underlying standard binary byte streams and use those in the Bit Serializer and Bit Deserializer. These custom bit streams basically allow me for a given value to write only certain bits of its memory representation and respectively can read a certain number of bits from an input stream  and reinterpret them as a data type in memory.
+
+Briefly, the way I do this is that I use a buffer of bytes in memory to write and read from certain amount of bits. Whenever the bytes available in the buffer are insufficient to satisfy a read operation I refill the internal buffer by reading from the underlying input stream. Whenever the internal buffer fills (or at user's request) I flush the internal buffer to the underlying output stream. Therefore, my implementation of bit streams work upon the underlying standard binary streams of C++ and use buffers to handle the required read and write operations.
+
+I am not going to provide any code here but you can find the source code in the project's repository.
+
+
+
+
+
+
+
+
+
+
