@@ -11,11 +11,11 @@ An important aspect of serialization and deserialization is that it has to be ef
 
 The contributions made to the project out of this chapter are four (4) serialization techniques for Data Factorizations and one (1) serialization technique for Factorization Trees, namely:
 
-1. Simple (De)Serializer - a simple serialization technique that is fast and retains the compression factor over flat representations
-2. Byte (De)Serializer - an extension to the Simple serialization technique to only store the required number of bytes for each value
-3. Bit (De)Serializer - a further extension to Byte serialization to only store the required number of bits for each value, with specialized methods that can be extended in the future to better support more values to allow better compression
-4. Bit Serializer HyperCube - the serialization technique that is used in the distributed system which differs from the normal Bit Serializer in that it does not ship all the values of a union but only those that should be shipped based on the Dimensions ID given.
-5. Factorization Tree (de)serializer - this is the only serialization technique for f-trees and is used in conjuction any of the above methods
+1. Factorization Tree (de)serializer - this is the only serialization technique for f-trees and is used in conjuction any of the above methods
+2. Simple (De)Serializer - a simple serialization technique that is fast and retains the compression factor over flat representations
+3. Byte (De)Serializer - an extension to the Simple serialization technique to only store the required number of bytes for each value
+4. Bit (De)Serializer - a further extension to Byte serialization to only store the required number of bits for each value, with specialized methods that can be extended in the future to better support more values to allow better compression
+5. Bit Serializer HyperCube - the serialization technique that is used in the distributed system which differs from the normal Bit Serializer in that it does not ship all the values of a union but only those that should be shipped based on the Dimensions ID given (this will be explained thoroughly in chapter **XXX**).
 
 I do not consider the Boost serialization technique as a contribution since it was an experiment that failed and later removed completely from the source code!
 
