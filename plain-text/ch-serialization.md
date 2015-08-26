@@ -278,7 +278,7 @@ void dfs_statistics(FRepNode *node, FactorizationTree *fTree) {
 }
 ```
 
-The statistics gathering is pretty straight-forward. We do a DFS-traversal on the factorization and whenever we are at a union node we update the required bytes for the number of children and for the values of that specific attribute represented by that union node.
+The statistics gathering is pretty straight-forward. We do a DFS-traversal on the factorization and whenever we are at a union node we update the required bytes for the number of children and for the values of that specific attribute represented by that union node. The `required_bytes()` method returns the number of bytes used starting from the LSB (least significant byte) to the MSB (most significant byte).
 
 In the pseudocode above *attribute_info* is a field of the Byte Serializer class and its type is as following:
 
@@ -298,4 +298,20 @@ The _Byte Deserializer_ is exactly the same as the _Simple Deserializer_ with th
 
 Before calling the method `dfs_load()` we separately read the counters for the required-bytes needed for union children and values respectively.
 
+
+### Bit (De)Serializer
+
+The final version of the serialization technique is _Bit Serializer_. As the name suggests it follows the same idea as the _Byte Serializer_ but instead of working at byte-level, it works at bit-level. Therefore, instead of storing the minimum amount of required bytes for each union count and each value, it stores only the required **bits** for them.
+
+#### Idea
+
+The idea of coming up with this serialization technique came up after we tested applying state-of-the-art compression algorithms like GZIP and BZIP2 upon our own _Simple_ and _Byte_ serializer. We saw that applying these compression algorithms reduced the output size by a constant factor ranging from 1-4x while at the same time increased the processing (serialization and deserialization) time significantly!
+
+Although _serialization_ is different than compression and should not be mixed, in our case it was obvious that we could be more space-efficient by exploiting the data in our factorizations. As the experiments showed depending on the data of course, we achieved similar or close enough compression on our factorizations in a fraction of the time required by BZIP2 compression for example which provides the best compression at the cost of slow processing.
+
+I want to emphasize that serialization is different than compression and that this chapter aimed at serialization of data factorizations. But, the knowledge of our structure allows us to exploit some things and at the same time be more space-efficient without increasing processing time a lot. Additionally, although we have some kind of compression, we do not have the drawback of standard compression algorithms (GZIP, BZIP2) that need the decompress the whole fragment first and then do any processing, since we are still able to deserialize each union separately and do processing as we go along (see future work section).
+
+#### Algorithms
+
+The algorithms are identical to those of _Byte Serializer_ and _Byte Deserializer_ with the exception that instead of using the `required_bytes()` method it uses the `required_bits()` method to only write the specific bits required to the output stream.
 
