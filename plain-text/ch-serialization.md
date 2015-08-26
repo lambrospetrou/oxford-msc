@@ -19,12 +19,15 @@ The purpose of _Boost::Serialization_ library is to allow developers to provide 
 
 The integration of the library in FDB and the actual implementation was pretty straightforward and was done in a few days, since I just had to add couple of _special_ methods in each class required to be serialized according to certain library rules. However, the end result was really bad.
 
-As I mentioned, this is more like a memory dump of the structure, including any pointers and their destination objects, in order to easily allow the deserializer to create the exact data structure. The caveat here is that the existing _FDB_ implementation is **very bad**! I really can't emphasize this enough. The current data structure of an f-representation has a lot of overhead, including many unneccessary fields, keeping all the values of a Union for example as a Double-Linked-List thus introducing excessive amount of pointers and many more. As a result, the serialization module was dumping everything, more importantly the pointers structure, to allow recreation during deserialization leading to a bloated outcome, both in terms of raw size in bytes but also in long serialization times.
+As I mentioned, this is more like a memory dump of the structure, including any pointers and their destination objects, in order to easily allow the deserializer to create the exact data structure. The caveat here is that the existing _FDB_ implementation is **very bad**! I really can't emphasize this enough. 
+The current data structure of an f-representation has a lot of overhead, including many unneccessary fields, keeping all the values of a Union for example as a Double-Linked-List thus introducing excessive amount of pointers and many more. As a result, the serialization module was dumping everything, more importantly the pointers structure, to allow recreation during deserialization leading to a bloated outcome, both in terms of raw size in bytes but also in long serialization times. 
+
+In my first preliminary experiments the serialized representation was almost the same size as the flat-relational representation, thus completely eliminating the compression factor of FDB over flat databases, which was unacceptable!
 
 In order to use _Boost::Serialization_ and at the same time having quality serialization I had to write custom code for each implementation class for every data structure we use to omit certain fields or doing my own book-keeping for the pointers and references to avoid all this going into the serialized output.
 It didn't worth it since still there was going to be some overhead added by Boost which cannot be removed, like class versioning etc.
 
-**First attempt failed** but led to some interesting observations. Although the current implementation was poorly done, a good serialization does not need all that information and we could also take advantage of the special structure of a factorization to make it as succinct as possible.
+My **first attempt failed** but led to some interesting observations. Although the current implementation was poorly done, a good serialization does not need all that information and we could also take advantage of the special structure of a factorization to make it as succinct as possible.
 
 ### Simple Binary Serializer
 
