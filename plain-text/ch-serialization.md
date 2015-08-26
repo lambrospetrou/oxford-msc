@@ -28,8 +28,8 @@ In this section I will describe the different approaches I have taken for the se
 
 ### Factorization Tree serialization
 
-The factorization tree is the back-bone component of a factorization since it defines the structure of the representation and all the relations beteen the attributes of the query.
-The serialization of an f-tree is the same for all the following different factorization serialization techniques and is implemented as a separate module since it is a very small data structure (around a few KBs) and we do not mind using the simplest serialization for it.
+The factorization tree is the back-bone component of a factorization since it defines the structure of the representation and all the relations between the attributes of the query.
+The serialization of an f-tree is the same for all the different factorization serialization techniques and is implemented as a separate module since it is a very small data structure (around a few KBs) and we do not mind using the simplest serialization for it.
 
 I decided to use the same structure as an f-tree definition file for its serialization too. As a result, the serialization of the f-tree show in **FIGURE OF F-TREE ABOVE** is as follows:
 ```
@@ -59,7 +59,7 @@ The last M lines are just the relations enumeration with their attributes.
 
 The serialization of an f-tree uses **Text** format and it is prefixed with its size length to allow the deserializer to know up-front the total f-tree serialization size in order to read all the information at once.
 
-The serialized f-tree (including its size header) is prefixed in the final serialization of the Data Factorization such that it can be deserialized first.
+The serialized f-tree (including its size header) is prefixed in the final serialization of the Data Factorization such that it can be deserialized first and allow us to use it during the factorization deserialization.
 
 ### Boost Serialization
 
