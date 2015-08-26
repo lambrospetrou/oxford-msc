@@ -88,10 +88,10 @@ My **first attempt failed** but led to some interesting observations. Although t
 
 ### Simple Binary (De)Serializer
 
-Before going into details for this serialization technique I want to state some observations made clear after my serialization version.
+Before going into details for this serialization technique I want to state some observations I made after investigating the reasons that led to failure of the previous serialization version.
 
-* Each f-representation is strictly associated with a factorization tree (f-tree) that defines its structure
-* The main types of a node in a factorization are the Multiplication (cross product) and the Summation (union) node types
+* Each factorization is strictly associated with a factorization tree (f-tree) that defines its structure
+* The main types of a node in a factorization are the _Multiplication_ (cross product) and the _Summation_ (union) node types
 * The values inside a union node can be stored in continuous memory, thus avoiding the excessive overhead of Double-Linked-Lists due to the pointers for each value
 
 Apart from the above observations, the trick that led to this serialization method is that the only nodes required to be serialized are **Union** nodes along with their values. Since each factorization strictly follows an f-tree, it seemed obvious and very beneficial for me to use the f-tree as a guide during serialization and deserialization leading to a more succinct outcome which just contains the absolute minimum of information, _the values_!
