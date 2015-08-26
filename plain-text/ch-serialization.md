@@ -221,11 +221,31 @@ To illustrate the deserialization process let us see how the serialization of th
 // **TODO**
 
 
+### Byte (De)Serializer
+
+Byte (De)Serializer is an extension of the Simple Binary (De)Serializer technique where the only difference is that it just stores required bytes only for each value and not all the number of bytes of each data type. 
+
+#### Idea
+
+If we really wanted each value to have only the required amount of bytes then somehow we would need to store that amount somewhere in the serialization in order to allow the deserializer to know how many bytes to read. It is easy to see that with millions of values, having a companion byte indicating the number of required bytes for each value could be excessive. Therefore, we decided for each attribute to use the required amount of bytes to cover the maximum value occured for that attribute. Therefore, we have different required-bytes for each attribute and we avoid the overhead of having them for each value since we just store them once as a serialization header at the very beginning.
+
+We also apply the same logic to the union children counts, thus for each attribute we store two values, required-bytes for union children and required-bytes for union values. These two counters for each attribute are serialized in full binary format (8-bit unsigned numbers) at the beginning of the serialization. Therefore the deserializer will read these counters and then it will know exactly the amount of bytes to read for each union node.
+
+#### Algorithms
+
+**Byte Serializer**
+
+The `dfs_save()` method is the same as the _Simple Serializer_ with the only difference that the 2 lines writing to the output stream the children count and the actual values use a special variant of the `write_binary()` method that accepts a 3rd argument denoting the number of bytes to write from the given value.
+
+However, in order to know this required-bytes for each attribute union children and values we have to do a pass over the factorization and gather statistics around the actual values. This means that Byte Serializer traverses the whole factorization twice, but as the experiments show it does not hurt a lot in processing time but helps a lot in space-efficiency.
+
+Here I will skip the `dfs_save()` method since it is exactly the same as described above and I will only provide the 1st pass algorithm that gathers statistics.
 
 
+**Byte Deserializer**
 
+The _Byte Deserializer_ is exactly the same as the _Simple Deserializer_ with the only difference that the 2 lines where it reads from the input stream the number of children and the values themselves it uses a 3rd argument to the `read_binary()` method that specifies the number of bytes to read.
 
-
-
+Before calling the method `dfs_load()` we separately read the counters for the required-bytes needed for union children and values respectively.
 
 
