@@ -148,12 +148,69 @@ The representation has two types of nodes, thus leading to two different treatme
 
 I want to mention that we iterate over the values twice since we want to serialize _all_ the values of a union completely and _then_ move on to the next union, like in an in-order traversal. Additionally, we use the f-tree to determine if a union belongs to an attribute which is _leaf_ in the f-tree to avoid recursing unnecessarily.
 
+To illustrate the serialization process let us see how the serialization of the factorization in the example will look like.
 
+// **TODO**
 
+**Simple Deserializer**
+```
+// @in: the input stream from which we deserialize the factorization
+// @currentAttr: the current attribute node in the f-tree (initially the root)
+FRepNode* dfs_load(istream *in, FTreeNode *currentAttr) {
+    // we know that we only deserialize unions so create a new union
+    Operation *opSummation = new Summation(currentAttr->name,
+                                           currentAttr->ID,
+                                           currentAttr->value_type);
+    // deserialize the children count and the values for this union
+    unsigned int childrenCount = read_binary(in);
+    vector<Value*> values = read_binary_many(in, value_type, childrenCount);
+    
+    // now use the f-tree to infer factorization structure 
+    if (is_leaf_attribute(currentAttr)) {
+        // just append the values to the current union and return
+        for each value V in 'values' {
+            opSummation->addChild(V, new Operand(...));
+        }
+        return opSummation;
+    } else {
+        // this is an internal attribute node therefore we need to check if 
+        // we have to create a multiplication node for each of child values
+        if (!is_multiplication_attribute(currentAttr)) {
+            // not a product attribute so just store children and recurse
+            for each value V in 'values' {
+                opSummation->addChild(V, dfs_load(in, currentAttr->firstChild));
+            }
+            return opSummation;
+        } else {
+            // each value of the union is a multiplication operation 
+            for each value V in 'values' {
+                Operation *opMult = new Multiplication();
+                opSummation->addChild(V, opMult);
+                // recurse on each attribute child and add it to this multiplication
+                for each child attribute CA in currentAttr->children {
+                    opMult->addChild(new Value(CA->attributeID),
+                                     dfs_load(in, CA));
+                } // end for each attribute in the product
+            }
+            return opSummation;
+        } // end of if product attribute
+    } // end of if leaf_attribute
+}
+```
 
+**Simple Deserializer** is not as simple as its counterpart but it is easy as soon as some key things are explained.
 
+First of all, we mentioned numerous times that we just serialize factorization nodes of type _Union_, so we know that in the deserialization we only deserialize union nodes, thus the creation of a Union node just from the start (_opSummation_). Then we read the children counter for this union and such many values from the input stream (note that we use binary format in deserializer too to match the serializer).
 
+We have the values for the union now but we have to use the f-tree to determine what type of factorization node each value should represent. 
 
+If the current union we deserialize represents a leaf attribute (_currentAddr_) (like _C_, _D_ and _F_ in the example) we just append the values in the union node using our special Operand node (does not really matter what we pass to that fo the serialization module).
+
+If the current union represents an internal attribute node (like _A_, _B_, _E_) we have to check if this is a multiplication attribute, meaning that it has 2 or more child attributes in the f-tree (like _A_ and _B_). If the current attribute is not product/multiplication we just add the values to the current union (_opSummation_) and as a _subtree_ node we add whatever the recursion will return (_line XXX_). If the current attribute is a multiplication then we need to create a factorization node of type _Multiplication_ for each value and each child of this multiplication will be the recursion result on each of the current attribute's children. For example, if the current attribute (currentAttr) is _B_ it means that is has two children, attribute _C_ and attribute _D_. Therefore each value of union B will have a node of type Multiplication that has two subtrees, one for each of the C and D attributes and their subtree nodes will be the respective recursion result (_line XXX_).
+
+To illustrate the deserialization process let us see how the serialization of the factorization in the example will be deserialized.
+
+// **TODO**
 
 
 
