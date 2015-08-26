@@ -43,7 +43,7 @@ The current data structure of an f-representation has a lot of overhead, includi
 In my first preliminary experiments the serialized representation was almost the same size as the flat-relational representation, thus completely eliminating the compression factor of FDB over flat databases, which was unacceptable!
 
 In order to use _Boost::Serialization_ and at the same time having quality serialization I had to write custom code for each implementation class for every data structure we use to omit certain fields or doing my own book-keeping for the pointers and references to avoid all this going into the serialized output.
-It didn't worth it since still there was going to be some overhead added by Boost which cannot be removed, like class versioning etc.
+It didn't worth it since Boost was still going to add some overhead which cannot be removed, like class versioning etc.
 
 My **first attempt failed** but led to some interesting observations. Although the current implementation was poorly done, a good serialization does not need all that information and we could also take advantage of the special structure of a factorization to make it as succinct as possible.
 
