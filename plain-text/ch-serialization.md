@@ -10,6 +10,7 @@ An important aspect of serialization and deserialization is that it has to be ef
 ## Contributions
 
 The contributions made to the project out of this chapter are the following:
+
 1. Simple (De)Serializer - a simple serialization technique that is fast and retains the compression factor over flat representations
 2. Byte (De)Serializer - an extension to the Simple serialization technique to only store the required number of bytes for each value
 3. Bit (De)Serializer - a further extension to Byte serialization to only store the required number of bits for each value, with specialized methods that can be extended in the future to better support more values to allow better compression
