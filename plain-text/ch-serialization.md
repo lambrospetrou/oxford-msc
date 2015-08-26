@@ -289,7 +289,7 @@ struct AttrInfo {
 }
 ```
 
-which as I mentioned before represents the header for each attribute that is written before the actual factorization serialization.
+which as I mentioned before represents the header for each attribute that is written before the actual factorization serialization and each counter is an 8-bit unsigned integer.
 
 
 **Byte Deserializer**
