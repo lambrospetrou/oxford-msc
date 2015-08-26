@@ -11,7 +11,7 @@ An important aspect of serialization and deserialization is that it has to be ef
 
 // **TODO** 
 
-## Serialization attempts
+## Factorization Serialization
 
 In this section I will describe the different approaches I have taken for the serialization leading to the final version used in the distributed system.
 
@@ -28,7 +28,38 @@ In this section I will describe the different approaches I have taken for the se
 
 ### Factorization Tree serialization
 
-// **TODO**
+The factorization tree is the back-bone component of a factorization since it defines the structure of the representation and all the relations beteen the attributes of the query.
+The serialization of an f-tree is the same for all the following different factorization serialization techniques and is implemented as a separate module since it is a very small data structure (around a few KBs) and we do not mind using the simplest serialization for it.
+
+I decided to use the same structure as an f-tree definition file for its serialization too. As a result, the serialization of the f-tree show in **FIGURE OF F-TREE ABOVE** is as follows:
+```
+6 4
+A int
+B int
+C int
+D int
+E int
+F int
+-1 0 1 1 0 4 
+R S T U 
+2 3 4 5 
+A,B,C
+A,B,D
+A,E
+E,F
+```
+
+The first line defines the number of attributes (N) and relations (M) in the f-tree, followed by N lines declaring the name of each attribute and its data type. 
+The current FDB implementation assigns IDs to the attributes in the order they are defined here with the first attribute (A in this case) being given ID 0 (zero) and the last attribute (F in this case) being given ID 5 (N-1).
+The next line defines the tree-relationship since for each attribute we specify the ID of its parent attribute. A has parent ID -1 which means A is root, then B has parent ID 0, C has parent ID 1, D has parent ID 1, E has parent ID 0 and F has parent ID 4.
+
+Then we similarly have a line containing the relation names, again being given IDs internally, with the following line specifying for each relation its parent attribute node.
+
+The last M lines are just the relations enumeration with their attributes.
+
+The serialization of an f-tree uses **Text** format and it is prefixed with its size length to allow the deserializer to know up-front the total f-tree serialization size in order to read all the information at once.
+
+The serialized f-tree (including its size header) is prefixed in the final serialization of the Data Factorization such that it can be deserialized first.
 
 ### Boost Serialization
 
