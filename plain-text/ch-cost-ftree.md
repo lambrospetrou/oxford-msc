@@ -8,7 +8,7 @@ Although complexity bounds are nice, there are a lot of cases where they are not
 
 What we really want to investigate is how to find a good f-tree, using more refined parameters, that will also depend on the _data_ we want to factorize and not only on the f-tree structure which ignores data (except relation sizes). The reason why this is an important part of the project is that in a distributed system, **see discussion in experiments Section X.Y**, the biggest bottleneck is communication and data distribution. Therefore, although s(Q) provides optimal trees we want to minimize communication cost, thus requiring an f-tree that results in the smallest factorization size possible.
 
-For example, In real-world scenarios it can happen that two f-trees have the same s(Q) property, let's say 2, but they might differ in size of a factor of 4x. Let's say f-tree A can produce a factorization with 1 million singletons (value nodes) where f-tree B can produce a factorization of 2 million singletons. Asymptotically, we cannot discriminate the two, but in real life using f-tree B will reduce our communication cost a lot, which does matter.
+For example, In real-world scenarios it can happen that two f-trees have the same s(Q) property, let's say 2, but they might differ in size with a factor of 4x. More precisely, f-tree A can produce a factorization with 1 million singletons (value nodes) where f-tree B can produce a factorization of 4 million singletons. Asymptotically, we cannot discriminate the two, but in real life using f-tree B will result in excessive data distribution thus increasing our communication cost a lot, so it does matter in the end-to-end processing.
 
 ## Contribution
 
