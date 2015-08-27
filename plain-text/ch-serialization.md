@@ -252,7 +252,7 @@ Byte (De)Serializer is an extension of the Simple Binary (De)Serializer techniqu
 
 #### Idea
 
-If we really wanted each value to have only the required amount of bytes then somehow we would need to store that amount somewhere in the serialization in order to allow the deserializer to know how many bytes to read. It is easy to see that with millions of values, having a companion byte indicating the number of required bytes for each value could be excessive. Therefore, we decided for each attribute to use the required amount of bytes to cover the maximum value occured for that attribute. Therefore, we have different required-bytes for each attribute and we avoid the overhead of having them for each value since we just store them once as a serialization header at the very beginning.
+If we really wanted each value to have only the required amount of bytes then somehow we would need to store that amount somewhere in the serialization in order to allow the deserializer to know how many bytes to read. It is easy to see that with millions of values, having a companion byte indicating the number of required bytes for each value could be excessive. Therefore, we decided for each attribute to use the required amount of bytes to cover the maximum value occured for that attribute. Therefore, we record different required-bytes for each attribute and we avoid the overhead of having them for each value since we just store them once as a serialization header at the very beginning.
 
 We also apply the same logic to the union children counts, thus for each attribute we store two values, required-bytes for union children and required-bytes for union values. These two counters for each attribute are serialized in full binary format (8-bit unsigned numbers) at the beginning of the serialization. Therefore the deserializer will read these counters and then it will know exactly the amount of bytes to read for each union node.
 
@@ -314,7 +314,7 @@ struct AttrInfo {
 }
 ```
 
-which as I mentioned before represents the header for each attribute that is written before the actual factorization serialization and each counter is an 8-bit unsigned integer.
+which represents the header for each attribute that is written before the actual factorization serialization and each counter is an 8-bit unsigned integer.
 
 
 **Byte Deserializer**
