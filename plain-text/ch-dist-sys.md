@@ -2,13 +2,11 @@
 
 ## Motivation
 
-Distributed systems and in database terms distributed query processing has become an absolute necessity in today's DBMS systems. The reason is simple, once you cannot process your data in a single machine you either have to process it fraction-at-a-time by storing intermediate results on disk or you do distributed processing. 
+Distributed systems and distributed query processing has become an absolute necessity in today's DBMS systems. The reason is simple, once you cannot process your data in a single machine (too large or too slow) you either have to process it fraction-at-a-time by storing intermediate results on disk or you do distributed processing. 
 
-Utilization of many machines has become the de-facto way to scale services to support either huge number of requests or the so-called Big Data. There are a lot of existing systems that offer distributed query processing, almost all the current NoSQL database systems are layered upon a distributed scalable system in order to be able to achieve the high throughput and low latencies they advertise.
+Utilization of many machines has become the de-facto way to scale services to support either huge number of requests or the so-called Big Data. There are a lot of existing systems that offer distributed query processing; almost all the current NoSQL database systems are layered upon a distributed scalable system in order to be able to achieve the high throughput and low latencies they advertise. Therefore it is natural that FDB needs to support distribution and delegation of query processing to a cluster of nodes in order to enable processing on big data or speed up complex queries that are too slow with single node processing.
 
-Distributed query processing existed from the very beginnings of PC-era but nowadays data is so enormous that it is a must, therefore it is natural that FDB needed to support distribution and delegation of query processing over a cluster of nodes to allow processing of big data or speed up single node processing.
-
-This chapter contains description of a system designed to work across a cluster of nodes, using the HyperCube algorithm to shuffle and distribute data and when all the data has been received by each node, it uses FDB query processing operators on each site to execute the query on the local data partition.
+This chapter contains description of a system designed to work across a cluster of nodes, using the HyperCube algorithm to shuffle and distribute data and FDB query engine for query processing on each site with the local data partition.
 
 ## Contribution
 
