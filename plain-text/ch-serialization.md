@@ -330,11 +330,11 @@ The final version of the serialization technique is _Bit Serializer_. As the nam
 
 #### Idea
 
-The idea of coming up with this serialization technique came up after we tested applying state-of-the-art compression algorithms like GZIP and BZIP2 upon our own _Simple_ and _Byte_ serializer. We saw that applying these compression algorithms reduced the output size by a constant factor ranging from 1-4x while at the same time increased the processing (serialization and deserialization) time significantly!
+The idea of this serialization technique came up after we tested applying state-of-the-art compression algorithms like GZIP and BZIP2 upon our own _Simple_ and _Byte_ serializers. We saw that applying these compression algorithms reduced the output size by a constant factor ranging from 1-4x while at the same time increased the processing (serialization and deserialization) time significantly!
 
-Although _serialization_ is different than compression and should not be mixed, in our case it was obvious that we could be more space-efficient by exploiting the data in our factorizations. As the experiments showed depending on the data of course, we achieved similar or close enough compression on our factorizations in a fraction of the time required by BZIP2 compression for example which provides the best compression at the cost of slow processing.
+Although _serialization_ is different than compression and should not be mixed (serialization is used for saving and loading a structure whereas compression is used to exploit values to reduce size), in our case it was obvious that we could be more space-efficient by exploiting the data in our factorizations. We achieved similar or close enough compression on our factorizations in a fraction of the time required by BZIP2 compression for example which provides the best compression at the cost of slow processing.
 
-I want to emphasize that serialization is different than compression and that this chapter aimed at serialization of data factorizations. But, the knowledge of our structure allows us to exploit some things and at the same time be more space-efficient without increasing processing time a lot. Additionally, although we have some kind of compression, we do not have the drawback of standard compression algorithms (GZIP, BZIP2) that need the decompress the whole fragment first and then do any processing, since we are still able to deserialize each union separately and do processing as we go along (see future work section).
+I want to emphasize that serialization is different than compression and that this chapter aimed at serialization of data factorizations. But, the knowledge of our structure allows us to exploit certain factorization properties and at the same time be more space-efficient without increasing processing time significantly. Additionally, although we have some kind of compression, we do not have the drawback of standard compression algorithms (GZIP, BZIP2) that need the decompress the whole fragment first and then do any processing, since we are still able to deserialize each union separately and do processing as we go along (**see discussion in Section X.Y**).
 
 #### Algorithms
 
@@ -346,16 +346,15 @@ This serialization technique requires bit-level precision when reading and writi
 
 Therefore, in order to provide this functionality I implemented custom input and output streams (_obitstream_ and _ibitstream_) that are used upon the underlying standard binary byte streams and use those in the Bit Serializer and Bit Deserializer. These custom bit streams basically allow me for a given value to write only certain bits of its memory representation and respectively can read a certain number of bits from an input stream  and reinterpret them as a data type in memory.
 
-Briefly, the way I do this is that I use a buffer of bytes in memory to write and read from certain amount of bits. Whenever the bytes available in the buffer are insufficient to satisfy a read operation I refill the internal buffer by reading from the underlying input stream. Whenever the internal buffer fills (or at user's request) I flush the internal buffer to the underlying output stream. Therefore, my implementation of bit streams work upon the underlying standard binary streams of C++ and use buffers to handle the required read and write operations.
+Briefly, the way I do this is using a buffer of bytes in memory to write and read from certain amount of bits. Whenever the bytes available in the internal buffer are insufficient to satisfy a read operation it is refilled by reading bytes from the underlying input stream. Whenever the internal buffer fills (or at user's request) the internal buffer is flushed to the underlying output stream. Therefore, this implementation of bit streams works upon the underlying standard binary streams of C++ and use buffers to handle the required read and write operations.
 
-In addition, an important feature that makes this serializer great is that in the future we could provide specialized read/write methods for certain data types (floats, doubles, strings) and further increase compression without adding processing overhead by applying compression algorithms. The current implementation of bit streams heavily uses C++ templates therefore this extension should be trivial to implement in a future project.
+In addition, an important feature that makes this serializer great is that in the future specialized read/write methods could be provided for certain data types (floats, doubles, strings) and further increase compression without adding processing overhead by applying compression algorithms. The current implementation of bit streams heavily uses C++ templates therefore this extension should be trivial to implement in a future project.
 
-I am not going to provide any code here but you can find the source code in the project's repository.
-
+I am not going to provide any code here but the source code can be found in the project's repository.
 
 ## Final remarks
 
-I described a serialization for Factorization Tree and 3 serialization techniques for Data Factorizations. In my serialization module I provide helper methods inside the package **fdb::serialization** that allows a user of the library to serialize and deserialize a full factorization with its f-tree easily.
+I described a serialization for Factorization Tree and three serialization techniques for Data Factorizations. In my serialization module I provide helper methods inside the package **fdb::serialization** that allows a user of the library to serialize and deserialize a full factorization with its f-tree easily.
 
 Namely the _fdb::serialization::serialize(FRepTree *, ostream&)_ receives a data factorization, FRepTRee\*, and a reference to an output stream and serializes both f-tree and representation into the stream. The counterpart function _fdb::serialization::deserialize(istream&)_ deserializes from the input stream and returns an FRepTRee\*.
 
@@ -366,7 +365,7 @@ f-tree serialization size | f-tree serialization | factorization serialization s
 
 ### Serializations illustrated
 
-Here I will just provide an illustration of the aforementioned serialization techniques and how they compare against the binary flat table serialization. I will use the factorization of figure X.3.
+In this section I provide an illustration of the aforementioned serialization techniques and how they compare against the binary flat table serialization. The example factorization is used, see **figure X.3**.
 
 The separator `|` is used just for illustration purposes to show the different fragments of each serialization. In real-world it does not exist and the bytes of each fragment are contiguous.
 
