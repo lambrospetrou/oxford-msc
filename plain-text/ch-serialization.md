@@ -30,6 +30,7 @@ Let us first define an example scenario that we are going to use throughout this
 Assume that we started with four (4) relations, R(A,B,C), S(A,B,D), T(A,E) and U(E,F), and applied a _NATURAL JOIN_ operator on all of them, resulting in the final table shown below.
 
 **Flat relational table after a JOIN on 4 relations.**
+```
 A|B|C|D|E|F|
 1|1|1|1|2|1|
 1|1|1|1|2|2|
@@ -40,6 +41,7 @@ A|B|C|D|E|F|
 2|1|2|1|1|1|
 2|1|2|1|2|1|
 2|1|2|1|2|2|
+```
 
 ![alt text][ex_ftree_wo]
 [ex_ftree_wo]: example-tree-wo.png "Example Factorization Tree"
