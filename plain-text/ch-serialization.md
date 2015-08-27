@@ -28,6 +28,11 @@ In this section I will describe the different approaches I have taken for the se
 <IMAGE_OF_A_FACTORIZATION_TREE_HERE>
 /////////////////////////////////////////////
 ```
+
+![alt text][ex_frep]
+[ex_frep]: example-rep.png "Example Data Factorization"
+
+
 ```
 //////////////////////////////////////////////
 <IMAGE_OF_A_REPRESENTATION_HERE_FOR_THE_TREE>
