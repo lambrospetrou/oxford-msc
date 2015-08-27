@@ -12,7 +12,7 @@ For example, In real-world scenarios it can happen that two f-trees have the sam
 
 ## Contribution
 
-My contribution is a _COST_ function that given a Factorization Tree (f-tree) and some specific estimates (explained below) returns an estimation of the total factorization size (number of singletons, value nodes) that would occur if our database was factorized based on that given f-tree.
+This chapter's contribution is a _COST_ function that given an f-tree and certain statistics returns an estimation of the total factorization size (number of singletons, value nodes) that would occur if our database (factorization) was factorized based on that given f-tree.
 
 ## Idea
 
