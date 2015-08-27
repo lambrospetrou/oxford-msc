@@ -6,10 +6,6 @@
 * Preliminaries (just briefly mention previous work ???)
     - introduce factorized databases and Hypercube (with Murmur hash functions etc). There, you need to cite relevant literature.
 
-* Finding good Factorization trees (COST function)
-    - COST function idea and algorithm
-    - estimates calculation algorithm
-
 * Serialization of Factorized representation
     - Boost
     - Simple Serializer (Binary)
@@ -33,6 +29,10 @@
         * apply query f-plan for current round
         * repeat if in Multi round execution
     - describe dist\_settings.conf and dist\_query.conf files
+
+* Finding good Factorization trees (COST function)
+    - COST function idea and algorithm
+    - estimates calculation algorithm
 
 * Experiments
     - COST function (traverse some f-trees in housing-1..8)

@@ -17,7 +17,8 @@ The contributions made to the project out of this chapter are four (4) serializa
 4. Bit (De)Serializer - a further extension to Byte serialization to only store the required number of bits for each value, with specialized methods that can be extended in the future to better support more values to allow better compression
 5. Bit Serializer HyperCube - the serialization technique that is used in the distributed system which differs from the normal Bit Serializer in that it does not ship all the values of a union but only those that should be shipped based on the Dimensions ID given (this will be explained thoroughly in chapter **XXX**).
 
-I do not consider the Boost serialization technique as a contribution since it was an experiment that failed and later removed completely from the source code!
+
+During the preliminary stages, I also implemented a Boost-based serialization technique using Boost::Serialization library but it has been abandoned because it turned out to be very bloated and did not satisfy our requirements (explained thoroughly later).
 
 ## Factorization Serialization
 
@@ -41,22 +42,19 @@ A|B|C|D|E|F|
 2|1|2|1|1|1|
 2|1|2|1|2|1|
 2|1|2|1|2|2|
+
+Show the relation tables too // TODO
 ```
 
 ![alt text][ex_ftree_wo]
 [ex_ftree_wo]: example-tree-wo.png "Example Factorization Tree"
 **Figure X.1 - Factorization Tree without the relation dependencies.**
 
-![alt text][ex_ftree]
-[ex_ftree]: example-tree.png "Example Factorization Tree"
-**Figure X.2 - Factorization Tree with the relation dependencies.**
-
-
 ![alt text][ex_frep]
 [ex_frep]: example-rep.png "Example Data Factorization"
 **Figure X.3 - Data Factorization based on the previous f-tree.**
 
-We will use the above Factorization Tree (_figure X.1_), named _Example-FTree_ to factorize the result of the JOIN with the Data Factorization based on that f-tree being shown in _figure X.3_. The f-tree show in _figure X.2_ also highlights the dependencies created due to the relation tables.
+We will use the above Factorization Tree (_figure X.1_), named _Example-FTree_ to factorize the result of the JOIN with the Data Factorization based on that f-tree being shown in _figure X.2_. 
 
 I will abstractly explain the in-memory representation of Data Factorizations as implemented at the moment.
 A factorized representation at the moment contains the following types of nodes:
@@ -71,7 +69,7 @@ A factorized representation at the moment contains the following types of nodes:
 The factorization tree is the back-bone component of a factorization since it defines the structure of the representation and all the relations between the attributes of the query.
 The serialization of an f-tree is the same for all the different factorization serialization techniques and is implemented as a separate module since it is a very small data structure (around a few KBs) and we do not mind using the simplest serialization for it.
 
-I decided to use the same structure as an f-tree definition file for its serialization too. As a result, the serialization of the f-tree show in _figure X.1_ is as follows:
+We use the same structure of an f-tree definition file for its serialization. As a result, the serialization of the f-tree show in _figure X.1_ is as follows:
 
 ```
 6 4
@@ -105,46 +103,46 @@ The serialized f-tree (including its size header) is prefixed in the final seria
 ### Boost Serialization
 
 As a first attempt to provide serialization/deserialization I decided to use **Boost::Serialization** library since it gathered high rating reviews among the online community and since I was already using _Boost_ for the networking modules of the system it seemed to be a great fit. 
-The purpose of _Boost::Serialization_ library is to allow developers to provide an easy way to add serialization to their **existing** data structures without writing a lot of boilerplate code since it can be described more or less like a memory dump of a data structure into a stream, which can be anything from a file, to a socket, etc.
+The purpose of _Boost::Serialization_ library is to allow developers to provide an easy way to add serialization to their **existing** data structures without writing a lot of boilerplate code since it can be described more or less like a memory dump of a data structure into a stream (file, socket, etc.).
 
-The integration of the library in FDB and the actual implementation was pretty straightforward and was done in a few days, since I just had to add couple of _special_ methods in each class required to be serialized according to certain library rules. However, the end result was really bad and disappointing.
+The integration of the library in FDB and the actual implementation was pretty straightforward. I had to add some _special_ methods in each class required to be serialized according to certain library rules. However, the end result was really disappointing due to very big serialization size.
 
-As I mentioned, this is more like a memory dump of the structure, including any pointers and their destination objects, in order to easily allow the deserializer to create the exact data structure. The major problem here and the reason of the bloated serialized output is that the existing _FDB_ implementation is not as space-efficient as it should be and that overhead is transferred into the serialization. 
-The current data structure of an f-representation has a lot of overhead, including many unneccessary fields, keeping all the values of a Union for example as a Double-Linked-List thus introducing excessive amount of pointers and many more. As a result, the serialization module was dumping everything, more importantly the pointer references, to allow re-creation during deserialization leading to a bloated outcome, both in terms of raw size in bytes but also in long serialization times. 
+As I mentioned, this is a memory dump of the structure, including any pointers and their destination objects, in order to easily allow the deserializer to create the exact data structure. The major problem here and the reason of the bloated serialized output is that the existing _FDB_ implementation is not as space-efficient as it should be and that overhead is transferred into the serialization. 
+The current data structure of a factorization has a lot of overhead, like keeping all the values of a Union as a Double-Linked-List thus introducing excessive amount of pointers. As a result, the serialization module was dumping everything, more importantly the pointer references, to allow re-creation during deserialization leading to a bloated outcome, both in terms of raw size in bytes but also in long serialization times. 
 
 In my first preliminary experiments the serialized representation was almost the same size as the flat-relational representation, thus completely eliminating the compression factor of FDB over flat databases, which was unacceptable!
 
 In order to use _Boost::Serialization_ and at the same time having quality serialization I had to write custom code for each implementation class for every data structure we use to omit certain fields or doing my own book-keeping for the pointers and references to avoid all this going into the serialized output.
-It didn't worth it since Boost was still going to add some overhead which cannot be removed, like class versioning etc.
+Eventually, this was not worth it since Boost was still going to add some overhead which cannot be removed, like class versioning.
 
 My **first attempt failed** but led to some interesting observations. Although the current implementation was poorly done, a good serialization does not need all that information and we could also take advantage of the special structure of a factorization to make it as succinct as possible.
 
-### Simple Binary (De)Serializer
+### Simple Raw Byte (De)Serializer
 
 Before going into details for this serialization technique I want to state some observations I made after investigating the reasons that led to failure of the previous serialization version.
 
-* Each factorization is strictly associated with a factorization tree (f-tree) that defines its structure
-* The main types of a node in a factorization are the _Multiplication_ (cross product) and the _Summation_ (union) node types
-* The values inside a union node can be stored in continuous memory, thus avoiding the excessive overhead of Double-Linked-Lists due to the pointers for each value
-* There is a need to de-couple the data, values, from the factorization structure since a lot of overhead comes with the representation and not the data
+* Each factorization is strictly associated with a factorization tree (f-tree) that defines its structure.
+* The main types of a node in a factorization are the _Multiplication_ (cross product) and the _Summation_ (union) node types.
+* The values inside a union node can be stored in continuous memory, thus avoiding the excessive overhead of Double-Linked-Lists due to the pointers for each value.
+* There is necessity to de-couple the data, values, from the factorization structure since a lot of overhead comes with the representation and not the data.
 
-Apart from the above observations, the trick that led to this serialization method is that the only nodes required to be serialized are **Union** nodes along with their values. Since each factorization strictly follows an f-tree, it seemed obvious and very beneficial for me to use the f-tree as a guide during serialization and deserialization leading to a more succinct outcome which just contains the absolute minimum of information, _the values_!
+Apart from the above observations, the trick that led to this serialization method is that the only nodes required to be serialized are **Union** nodes along with their values. Since each factorization strictly follows an f-tree, it became obvious to use the f-tree as a guide during serialization and deserialization leading to a more succinct outcome which just contains the absolute minimum of information, _the values_!
 
 The problem with generic serialization techniques, like _Boost_ described above is that all information goes into the serialized outcome to allow correct deserialization. We can avoid this overhead in our case since we know the special structure of the factorization and therefore we can use the f-tree to infer the structure of the representation and load the values from the serialized form as we go along during deserialization.
 
 #### Idea
 
-The main idea of **Simple Serializer** is that we traverse the f-representation in a DFS (Depth-First-Search) order and every time we find a _Union_ node we serialize it, then continue.
-The serialization of a union node is extremely simple and just contains a number N indicating the number of values in that specific union, followed by N values of the attribute represented by that union.
+The main idea of **Simple Serializer** is that we traverse the factorization in a DFS (Depth-First-Search) order and every time we find a _Union_ node we serialize it, then continue.
+The serialization of a union node is simple and just contains a number N indicating the number of values in that specific union, followed by N values of the attribute represented by that union.
 
 For example, if a specific union of attribute A (of type _int_) has the values [3, 6, 7, 8, 123, 349], its serialization would be:
 ```
 6 3 6 7 8 123 349
 ```
 
-It is important to mention that I use **Binary** read and write methods during serialization and deserialization and for each children count I use 32-bit unsigned integer values whereas for the actual values I use the corresponding number of bytes required for that attribute data type (i.e. _double_ = sizeof(double) = 8 bytes).
+It is important to mention that we use **Binary** read and write methods during serialization and deserialization and for each children count we use 32-bit unsigned integer values whereas for the actual values the corresponding number of bytes required for that attribute data type (i.e. _double_ = sizeof(double) = 8 bytes) is used.
 
-The serialization of a factorization is just a sequence of _children counts_ followed by their corresponding values. As I said, the important benefit of this serialization technique is that I just store the absolute minimum information required to recover the representation.
+The serialization of a factorization is just a sequence of _children counts_ followed by their corresponding values. The important benefit of this serialization technique is that only the absolute minimum information required to recover the representation is stored.
 
 Moreover, **Simple Serializer** assumes that we already deserialized the Factorization Tree (discussed previously) and we can use it to infer the structure of the representation.
 
@@ -185,10 +183,10 @@ dfs_save(FRepNode *node, FactorizationTree *fTree, ostream *out) {
 }
 ```
 
-_Simple Serializer_ is an extension of the well-known DFS traversal algorithm with in-order value processing. 
+_Simple Serializer_ is an extension of the well-known DFS traversal algorithm for trees with in-order value processing. 
 The representation has two types of nodes, thus leading to two different treatments in serialization. When a _multiplication_ node is encountered the algorithm recurses on its descendants without serializing anything since the multiplication information can be inferred from the f-tree. When a _union_ node is encountered we first serialize the number of values in that union, followed by the serialization of all the values. At the end we recurse on each of child to complete the DFS-traversal.
 
-I want to mention that we iterate over the values twice since we want to serialize _all_ the values of a union completely and _then_ move on to the next union, like in an in-order traversal. Additionally, we use the f-tree to determine if a union belongs to an attribute which is _leaf_ in the f-tree to avoid recursing unnecessarily.
+The algorithm iterates over the values twice since all the values of a union have to serialized completely and _then_ move on to the next union, like in an in-order traversal. Additionally, the f-tree is used to determine if a union belongs to an attribute which is _leaf_ in the f-tree to avoid recursing unnecessarily.
 
 
 **Simple Deserializer**
@@ -239,11 +237,11 @@ FRepNode* dfs_load(istream *in, FTreeNode *currentAttr) {
 
 **Simple Deserializer** is not as simple as its counterpart but it is easy as soon as some key things are explained.
 
-First of all, we mentioned numerous times that we just serialize factorization nodes of type _Union_, so we know that in the deserialization we only deserialize union nodes, thus the creation of a Union node just from the start (_opSummation_). Then we read the children counter for this union and such many values from the input stream (note that we use binary format in deserializer too to match the serializer).
+First of all, only factorization nodes of type _Union_ are serialized, so we know that during the deserialization phase we only deserialize union nodes, thus the creation of a Union node just from the start of the function (_opSummation_). Then we read the children counter for this union and such many values from the input stream (note that we use binary format in deserializer too to match the serializer).
 
-We have the values for the union now but we have to use the f-tree to determine what type of factorization node each value should represent. 
+Now that the values for the union are read we have to use the f-tree to determine what type of factorization node each value should represent. 
 
-If the current union we deserialize represents a leaf attribute (_currentAddr_) (like _C_, _D_ and _F_ in the example) we just append the values in the union node using our special Operand node (does not really matter what we pass to that fo the serialization module).
+If the current union being deserialize represents a leaf attribute (_currentAddr_) (like _C_, _D_ and _F_ in the example) we just append the values in the union node using our special Operand node (does not really matter what we pass to that fo the serialization module).
 
 If the current union represents an internal attribute node (like _A_, _B_, _E_) we have to check if this is a multiplication attribute, meaning that it has 2 or more child attributes in the f-tree (like _A_ and _B_). If the current attribute is not product/multiplication we just add the values to the current union (_opSummation_) and as a _subtree_ node we add whatever the recursion will return (_line XXX_). If the current attribute is a multiplication then we need to create a factorization node of type _Multiplication_ for each value and each child of this multiplication will be the recursion result on each of the current attribute's children. For example, if the current attribute (currentAttr) is _B_ it means that is has two children, attribute _C_ and attribute _D_. Therefore each value of union B will have a node of type Multiplication that has two subtrees, one for each of the C and D attributes and their subtree nodes will be the respective recursion result (_line XXX_).
 
