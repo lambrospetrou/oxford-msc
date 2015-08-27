@@ -336,6 +336,7 @@ I described a serialization for Factorization Tree and 3 serialization technique
 Namely the _fdb::serialization::serialize(FRepTree *, ostream&)_ receives a data factorization, FRepTRee\*, and a reference to an output stream and serializes both f-tree and representation into the stream. The counterpart function _fdb::serialization::deserialize(istream&)_ deserializes from the input stream and returns an FRepTRee\*.
 
 The combined serialization is of the form: 
+```
 <f-tree serialization size><f-tree serialization><factorization serialization size><factorization serialization>
-
+```
 
