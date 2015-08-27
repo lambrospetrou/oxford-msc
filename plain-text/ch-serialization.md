@@ -370,6 +370,8 @@ The combined serialization is of the form:
 
 Here I will just provide an illustration of the aforementioned serialization techniques and how they compare against the binary flat table serialization. I will use the factorization of figure X.3.
 
+The separator `|` is used just for illustration purposes to show the different fragments of each serialization. In real-world it does not exist and the bytes of each fragment are contiguous.
+
 **Flat tuples binary serialization**
 1 1 1 1 2 1 | 1 1 1 1 2 2 | 1 1 1 2 2 1 | 1 1 1 2 2 2 | 1 2 2 1 2 1 | 1 2 2 1 2 2 | 2 1 2 1 1 1 | 2 1 2 1 2 1 | 2 1 2 1 2 2 
 total bytes = number_of_tuples * number_of_attributes * sizeof(int) = 9 * 6 * 4 = 216 bytes
