@@ -3,7 +3,8 @@
 
 * Introduction
 
-* Background (just briefly mention previous work ???)
+* Preliminaries (just briefly mention previous work ???)
+    - introduce factorized databases and Hypercube (with Murmur hash functions etc). There, you need to cite relevant literature.
 
 * Finding good Factorization trees (COST function)
     - COST function idea and algorithm
