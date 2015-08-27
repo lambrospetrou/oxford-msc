@@ -23,7 +23,7 @@ I do not consider the Boost serialization technique as a contribution since it w
 
 In this section I will describe the different approaches I have taken for the serialization leading to the final version used in the distributed system.
 
-### Example we will use
+### Example
 
 Let us first define an example scenario that we are going to use throughout this chapter (and reference later in other chapters).
 
@@ -45,16 +45,16 @@ A|B|C|D|E|F|
 
 ![alt text][ex_ftree_wo]
 [ex_ftree_wo]: example-tree-wo.png "Example Factorization Tree"
-**Factorization Tree without the relation dependencies.**
+**Figure X.1 - Factorization Tree without the relation dependencies.**
 
 ![alt text][ex_ftree]
 [ex_ftree]: example-tree.png "Example Factorization Tree"
-**Factorization Tree with the relation dependencies.**
+**Figure X.2 - Factorization Tree with the relation dependencies.**
 
 
 ![alt text][ex_frep]
 [ex_frep]: example-rep.png "Example Data Factorization"
-**Data Factorization based on the previous f-tree.**
+**Figure X.3 - Data Factorization based on the previous f-tree.**
 
 We will use the above Factorization Tree (_figure X.1_), named _Example-FTree_ to factorize the result of the JOIN with the Data Factorization based on that f-tree being shown in _figure X.3_. The f-tree show in _figure X.2_ also highlights the dependencies created due to the relation tables.
 
