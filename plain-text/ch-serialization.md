@@ -190,9 +190,6 @@ The representation has two types of nodes, thus leading to two different treatme
 
 I want to mention that we iterate over the values twice since we want to serialize _all_ the values of a union completely and _then_ move on to the next union, like in an in-order traversal. Additionally, we use the f-tree to determine if a union belongs to an attribute which is _leaf_ in the f-tree to avoid recursing unnecessarily.
 
-To illustrate the serialization process let us see how the serialization of the factorization in the example will look like.
-
-// **TODO**
 
 **Simple Deserializer**
 ```
@@ -249,10 +246,6 @@ We have the values for the union now but we have to use the f-tree to determine 
 If the current union we deserialize represents a leaf attribute (_currentAddr_) (like _C_, _D_ and _F_ in the example) we just append the values in the union node using our special Operand node (does not really matter what we pass to that fo the serialization module).
 
 If the current union represents an internal attribute node (like _A_, _B_, _E_) we have to check if this is a multiplication attribute, meaning that it has 2 or more child attributes in the f-tree (like _A_ and _B_). If the current attribute is not product/multiplication we just add the values to the current union (_opSummation_) and as a _subtree_ node we add whatever the recursion will return (_line XXX_). If the current attribute is a multiplication then we need to create a factorization node of type _Multiplication_ for each value and each child of this multiplication will be the recursion result on each of the current attribute's children. For example, if the current attribute (currentAttr) is _B_ it means that is has two children, attribute _C_ and attribute _D_. Therefore each value of union B will have a node of type Multiplication that has two subtrees, one for each of the C and D attributes and their subtree nodes will be the respective recursion result (_line XXX_).
-
-To illustrate the deserialization process let us see how the serialization of the factorization in the example will be deserialized.
-
-// **TODO**
 
 
 ### Byte (De)Serializer
@@ -372,4 +365,24 @@ The combined serialization is of the form:
 ```
 <f-tree serialization size><f-tree serialization><factorization serialization size><factorization serialization>
 ```
+
+### Serializations illustrated
+
+Here I will just provide an illustration of the aforementioned serialization techniques and how they compare against the binary flat table serialization. I will use the factorization of figure X.3.
+
+**Flat tuples binary serialization**
+1 1 1 1 2 1 | 1 1 1 1 2 2 | 1 1 1 2 2 1 | 1 1 1 2 2 2 | 1 2 2 1 2 1 | 1 2 2 1 2 2 | 2 1 2 1 1 1 | 2 1 2 1 2 1 | 2 1 2 1 2 2 
+total bytes = number_of_tuples * number_of_attributes * sizeof(int) = 9 * 6 * 4 = 216 bytes
+
+**Simple Serializer**
+2 a1 a2 | 2 b1 b2 | 1 c1 | 2 d1 d2 | 1 c2 | 1 d1 | 1 e1 | 2 f1 f2 | 1 b1 | 1 c2 | 1 d1 | 2 e1 e2 | 1 f1 | 2 f1 f2
+total bytes = (number_of_unions * sizeof(uint_32)) + ( sizeof(int) * number_value_nodes) = (14 * 4) + (20 * 4) = 136 bytes
+
+**Bit / Byte Serializer**
+
+Recall that _Byte Serializer_ and _Bit Serializer_ use the same serialization form as the _Simple Serializer_ but store only the required amount of bytes and bits respectively for each attribute union children count and union max value. 
+
+For the example we illustrate here the Byte Serializer just needs 1 byte for both the union chidlren counts and for the max value occured in each attribute. Therefore its serialization size would be 34 bytes.
+Bit Serializer needs 2 bits to represent max values and max number of children occured in each attribute so the serialization size is reduced to 68 bits, thus requiring exactly 8 bytes.
+I should note that both these serializers require a header that for each attribute has 2 bytes denoting the max number of bytes/bits used in each union or value (i.e. 6 attributes * 2 bytes each in the header). Thus, the total serialization size for Byte and Bit Serializers is 46 and 20 bytes respectively.
 
