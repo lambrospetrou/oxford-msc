@@ -23,28 +23,54 @@ I do not consider the Boost serialization technique as a contribution since it w
 
 In this section I will describe the different approaches I have taken for the serialization leading to the final version used in the distributed system.
 
-```
-//////////////////////////////////////////////
-<IMAGE_OF_A_FACTORIZATION_TREE_HERE>
-/////////////////////////////////////////////
-```
+### Example we will use
+
+Let us first define an example scenario that we are going to use throughout this chapter (and reference later in other chapters).
+
+Assume that we started with four (4) relations, R(A,B,C), S(A,B,D), T(A,E) and U(E,F), and applied a _NATURAL JOIN_ operator on all of them, resulting in the final table shown below.
+
+**Flat relational table after a JOIN on 4 relations.**
+A|B|C|D|E|F|
+1|1|1|1|2|1|
+1|1|1|1|2|2|
+1|1|1|2|2|1|
+1|1|1|2|2|2|
+1|2|2|1|2|1|
+1|2|2|1|2|2|
+2|1|2|1|1|1|
+2|1|2|1|2|1|
+2|1|2|1|2|2|
+
+![alt text][ex_ftree_wo]
+[ex_ftree_wo]: example-tree-wo.png "Example Factorization Tree"
+**Factorization Tree without the relation dependencies.**
+
+![alt text][ex_ftree]
+[ex_ftree]: example-tree.png "Example Factorization Tree"
+**Factorization Tree with the relation dependencies.**
+
 
 ![alt text][ex_frep]
 [ex_frep]: example-rep.png "Example Data Factorization"
+**Data Factorization based on the previous f-tree.**
 
+We will use the above Factorization Tree (_figure X.1_), named _Example-FTree_ to factorize the result of the JOIN with the Data Factorization based on that f-tree being shown in _figure X.3_. The f-tree show in _figure X.2_ also highlights the dependencies created due to the relation tables.
 
-```
-//////////////////////////////////////////////
-<IMAGE_OF_A_REPRESENTATION_HERE_FOR_THE_TREE>
-/////////////////////////////////////////////
-```
+I will abstractly explain the in-memory representation of Data Factorizations as implemented at the moment.
+A factorized representation at the moment contains the following types of nodes:
+
+1. _Union_ nodes just contain a list of the values for that specific attribute union
+2. _Multiplication values_ are value nodes that act like _Multiplication_ nodes since their attribute is a multiplication attribute (based on f-tree) and they have two or more Union nodes as children
+3. _Union values_ are value nodes that just have one Union node as a child
+4. _Operand values_ is just another node type to denote leaf values
 
 ### Factorization Tree serialization
 
 The factorization tree is the back-bone component of a factorization since it defines the structure of the representation and all the relations between the attributes of the query.
 The serialization of an f-tree is the same for all the different factorization serialization techniques and is implemented as a separate module since it is a very small data structure (around a few KBs) and we do not mind using the simplest serialization for it.
 
-I decided to use the same structure as an f-tree definition file for its serialization too. As a result, the serialization of the f-tree show in **FIGURE OF F-TREE ABOVE** is as follows:
+I decided to use the same structure as an f-tree definition file for its serialization too. As a result, the serialization of the f-tree show in _figure X.1_ is as follows:
+
 ```
 6 4
 A int
