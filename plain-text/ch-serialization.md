@@ -93,6 +93,7 @@ Before going into details for this serialization technique I want to state some 
 * Each factorization is strictly associated with a factorization tree (f-tree) that defines its structure
 * The main types of a node in a factorization are the _Multiplication_ (cross product) and the _Summation_ (union) node types
 * The values inside a union node can be stored in continuous memory, thus avoiding the excessive overhead of Double-Linked-Lists due to the pointers for each value
+* There is a need to de-couple the data, values, from the factorization structure since a lot of overhead comes with the representation and not the data
 
 Apart from the above observations, the trick that led to this serialization method is that the only nodes required to be serialized are **Union** nodes along with their values. Since each factorization strictly follows an f-tree, it seemed obvious and very beneficial for me to use the f-tree as a guide during serialization and deserialization leading to a more succinct outcome which just contains the absolute minimum of information, _the values_!
 
@@ -334,12 +335,7 @@ I described a serialization for Factorization Tree and 3 serialization technique
 
 Namely the _fdb::serialization::serialize(FRepTree *, ostream&)_ receives a data factorization, FRepTRee\*, and a reference to an output stream and serializes both f-tree and representation into the stream. The counterpart function _fdb::serialization::deserialize(istream&)_ deserializes from the input stream and returns an FRepTRee\*.
 
-THe combined serialization is of the form: 
+The combined serialization is of the form: 
 <f-tree serialization size><f-tree serialization><factorization serialization size><factorization serialization>
-
-
-
-
-
 
 
