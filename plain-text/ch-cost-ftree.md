@@ -25,7 +25,7 @@ Let's start with some facts about FDB factorizations:
 3. a factorization may have many relation dependencies and each dependency forces its attributes to exist along a single path in the f-tree (like a linear linked list)
 4. some attributes belong to many relations, thus have many dependencies
 
-Considering the above facts, we used the number of unique values per union, therefore easily finding unique values per attribute. Additionally, the dependencies matter a lot since in complex queries like _triangles_ or _squares_ we have all the attributes in a single path, forming a single linked list and each level down the path affects the factorization size.
+Considering the above facts, we used the number of unique values per union, therefore easily finding unique values per attribute. Additionally, the dependencies matter a lot since in complex queries like _triangles_ or _squares_, see figure X.3,  we have all the attributes in a single path, forming a single linked list and each level down the path affects the factorization size.
 
 ![alt text][cost_ftree]
 [cost_ftree]: cost-tree.png "Simple Factorization Tree"
@@ -34,6 +34,10 @@ Considering the above facts, we used the number of unique values per union, ther
 ![alt text][cost_frep]
 [cost_frep]: cost-rep.png "Simple Factorization"
 **Figure X.2 - a simple data factorization.**
+
+![alt text][cost_ftree-tr-sq]
+[cost_ftree-tr-sq]: ftree-triangle-square.png "Triangle and Square queries"
+**Figure X.3 - f-trees for triangle and square queries.**
 
 We define _cost_ of a factorization the total number of value nodes or singletons, thus the sum of the number of value nodes for each attribute. For example the factorization in **figure X.2** has 20 value nodes (black nodes) so the cost for that f-tree is 20.
 
