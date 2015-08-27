@@ -41,23 +41,23 @@ We define _cost_ of a factorization the total number of value nodes or singleton
 
 A first idea was to use an f-tree as a reference tree and based on some statistics calculated on this reference tree we would calculate the factorization estimated size for any other arbitrary f-tree.
 
-Given an f-tree and its factorization (figure X.2), we calculate for each attribute the average number of unique values (children of a union) under any of its ancestor attributes. The average is taken over all the ancestor's children values.
-
-For example, assuming the f-tree in figure X.1 and its factorization (figure X.2), we have the following statistics:
+Given an f-tree and its factorization, we calculate for each attribute the average number of unique values (children of a union) under any of its ancestor attributes. The average is taken over all the ancestor's children values.
 
 **Notation** 
 
 1. I use _XuY_ to denote the average number of unique values of attribute X _under_ a single value of attribute Y, where Y is an ancestor of X.
 2. I use _uniq(X)_ to denote the average unique number of values among all the unions of attribute X.
 
+For example, assuming the f-tree in figure X.1 and its factorization (figure X.2), we have the following statistics:
+
 ```
 uniq(A), uniq(B), uniq(C), uniq(D), uniq(E), uniq(F)
 BuA, CuA, CuB, DuA, DuB, EuA, FuA, FuE
 ```
 
-Having these averages calculated, given any other f-tree _T_ the estimated size of the factorization would be calculated by summing the estimated number of nodes for each attribute. To calculate this a path between an attribute X and its parent inside the reference tree should be found and then multiplying all the pair-wise estimates along the path together to get an estimation for the number of values of X.
+Having the above statistics calculated, given any other f-tree _T_ the estimated size of the factorization would be calculated by summing the estimated number of nodes for each attribute. To calculate the cost for an attribute X, a path between X and its parent in T should be found inside the reference tree, followed by the multiplication of all the pair-wise averages (XuY) along the path to get an estimation for the number of values of X.
 
-This method seemed logical at first glance but quickly turned out to be wrong and over-estimating because of the excessive usage of estimates. Therefore it was considered unusable and unreliable.
+This approach quickly turned out to be wrong and over-estimating because of the excessive usage of estimates when we multiplied them for all the attribute pairs along the path.
 
 ### Proposed idea
 
