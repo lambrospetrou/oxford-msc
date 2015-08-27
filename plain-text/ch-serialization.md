@@ -373,12 +373,20 @@ Here I will just provide an illustration of the aforementioned serialization tec
 The separator `|` is used just for illustration purposes to show the different fragments of each serialization. In real-world it does not exist and the bytes of each fragment are contiguous.
 
 **Flat tuples binary serialization**
+
+```
 1 1 1 1 2 1 | 1 1 1 1 2 2 | 1 1 1 2 2 1 | 1 1 1 2 2 2 | 1 2 2 1 2 1 | 1 2 2 1 2 2 | 2 1 2 1 1 1 | 2 1 2 1 2 1 | 2 1 2 1 2 2 
-total bytes = number_of_tuples * number_of_attributes * sizeof(int) = 9 * 6 * 4 = 216 bytes
+```
+
+total bytes = number_of_tuples * number_of_attributes * sizeof(int) = 9 * 6 * 4 = **216 bytes**
 
 **Simple Serializer**
+
+```
 2 a1 a2 | 2 b1 b2 | 1 c1 | 2 d1 d2 | 1 c2 | 1 d1 | 1 e1 | 2 f1 f2 | 1 b1 | 1 c2 | 1 d1 | 2 e1 e2 | 1 f1 | 2 f1 f2
-total bytes = (number_of_unions * sizeof(uint_32)) + ( sizeof(int) * number_value_nodes) = (14 * 4) + (20 * 4) = 136 bytes
+```
+
+total bytes = (number_of_unions * sizeof(uint_32)) + ( sizeof(int) * number_value_nodes) = (14 * 4) + (20 * 4) = **136 bytes**
 
 **Bit / Byte Serializer**
 
@@ -386,5 +394,5 @@ Recall that _Byte Serializer_ and _Bit Serializer_ use the same serialization fo
 
 For the example we illustrate here the Byte Serializer just needs 1 byte for both the union chidlren counts and for the max value occured in each attribute. Therefore its serialization size would be 34 bytes.
 Bit Serializer needs 2 bits to represent max values and max number of children occured in each attribute so the serialization size is reduced to 68 bits, thus requiring exactly 8 bytes.
-I should note that both these serializers require a header that for each attribute has 2 bytes denoting the max number of bytes/bits used in each union or value (i.e. 6 attributes * 2 bytes each in the header). Thus, the total serialization size for Byte and Bit Serializers is 46 and 20 bytes respectively.
+I should note that both these serializers require a header that for each attribute has 2 bytes denoting the max number of bytes/bits used in each union or value (i.e. 6 attributes * 2 bytes each in the header). Thus, the total serialization size for Byte and Bit Serializers is **46 and 20 bytes** respectively.
 
