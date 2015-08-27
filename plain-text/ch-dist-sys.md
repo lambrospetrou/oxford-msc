@@ -10,8 +10,8 @@ This chapter contains description of a system designed to work across a cluster 
 
 ## Contribution
 
-1. Implementation of the HyperCube algorithm over factorizations for data shuffling and distribution and integration of it with the Bit Serializer described in **Chapter X**.
-2. Design and implementation of a distributed system that is able to receive a query, load the input from local storage, shuffle and distribute data over TCP, execute the query on local data using the FDB query engine, gather results. Important point that differentiate this system from other existing ones is that we use factorizations end-to-end, input -> processing -> output.
-3. Different modes of distributed execution, namely Single round and Multi round execution. Single round execution is when the system only shuffles and transmits data between the nodes once and then apply the whole query at the same time, whereas Multi round execution partitions the query into smaller segments and repeats the Single round execution for each query segment.
+1. Implementation of the HyperCube algorithm [**Suciu's paper and the others**] over factorizations for data shuffling and distribution. Integration of HYperCube with the Bit Serializer described in **Chapter X**.
+2. Design and implementation of a distributed system that is able to receive a query, load the input from local storage, shuffle and distribute data over TCP, execute the query on local data using the FDB query engine, and finally gather results. Major aspect that differentiate this system from other existing ones is that we use factorizations end-to-end. _Factorizations Input_ => _FDB Processing_ => _Factorizations Output_.
+3. Different modes of distributed execution, namely Single round and Multi round execution. Single round execution only shuffles and transmits data between the nodes _once_ and then apply the whole query at the same time, whereas Multi round execution partitions the query into smaller segments and repeats the Single round execution for each query segment.
 
 
