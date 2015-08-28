@@ -91,11 +91,11 @@ For example, when we want to serialize for node 6 the following vector ID is use
     ```
     [ 1 0 0 0 2 0 ]
     ```
-
-and when we want to serialize for node 2 the following vector ID is used:
-```
-[ 0 0 0 0 1 0 ]
-```
+    
+    and when we want to serialize for node 2 the following vector ID is used:
+    ```
+    [ 0 0 0 0 1 0 ]
+    ```
 
 As you can see each node's expanded ID is a vector of size N (number of attributes). Each position _T_ in this vector either has zero if attribute with ID T is _NOT_ among the hashed attributes or has the node's ID in dimension T as specified in the node's multi-dimensional ID.
 
