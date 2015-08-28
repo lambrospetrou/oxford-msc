@@ -45,4 +45,20 @@ The distributed execution of a query has the four stages explained below.
 
 The whole query processing is done in stage 3, including data partitioning, shuffling and f-plan execution on local factorizations. The rest stages were required for bootstrapping purposes of the system and in a real-world scenario where a cluster of nodes is already up and running they would not even exist. Therefore, it is nice to have the query processing isolated in order to be able to reason correctly about each processing phase and also about the end-to-end experience of the system which can easily be measured on the master node.
 
- 
+### Communication in the cluster
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
