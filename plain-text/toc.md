@@ -51,6 +51,7 @@
 * Future Work
     - Extension to the Bit serializer to provide custom serializer for certain data types (negative numbers, doubles, strings) to allow further compression
     - Concurrency added to the serialization should be trivial since each branch of the root attribute can be serialized in parallel and then just stored in order
+    - instantly passed received factorizations from ReaderData to execution thread which will merge it with the global tree and apply the f-plan on the partial result until the next factorization is received
     - A lot of proposals regarding the communication during the execution of the distributed query
         * What f-tree should nodes send data with
         * What policy should the nodes follow when communicating ? Ordered vs Unordered vs Paired vs Random vs Round-Robin with partial data
