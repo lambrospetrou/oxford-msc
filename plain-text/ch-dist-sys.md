@@ -111,9 +111,21 @@ A naive approach would traverse the factorization, hash the values in each union
 
 As a result, our algorithm consists of two phases, namely the **masking phase** and the **serialization phase**. During the _masking phase_ we create bitset masks for each union denoting whether each value is valid to be sent to the examined node, and during the _serialization phase_ the valid values are serialized in the exact way _Bit Serializer_ works, see **Section X.Y**.
 
+
+
+
+
+
+
+
+
+
+
+
+
 #### Deserialization
 
-_Bit Serializer HyperCube_ is perfectly compatible with the regular _Bit Deserializer_ therefore one can use that to deserialize hypercube serializations into factorizations. This is how each node deserializes the data received during the communication rounds into factorizations which are then being processed locally.
+_Bit Serializer HyperCube_ is perfectly compatible with the regular _Bit Deserializer_. Therefore one can use it to deserialize hypercube serializations into factorizations. This is how each node deserializes the data received during the communication rounds in the FDB distributed query processing, see **Chapter U**, into factorizations which are then being processed locally. 
 
 
 
