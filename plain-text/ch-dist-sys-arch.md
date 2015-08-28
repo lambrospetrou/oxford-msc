@@ -99,7 +99,7 @@ Node 5: 4 3 2 1
 
 The first block defines the order of writes for each node. Node 1 for instance, will send data to node 2, then node 3, then node 4 finally node 5. The second block defines the order of reads for each node. For example, Node 3 will read from node 2, then node 1, then node 5 and finally node 4.
 
-The important thing in this ordering is if we distinguish 4 communication rounds (vertical division) we can see that no node is ever stalled or blocked without reading or writing. Additionally, there is a pairing between the reads and the writes, which means that for any given node A, the writes _targetting_ A will be done in the same order as A will do his reads.
+The important thing in this ordered communication, is that if we distinguish 4 communication rounds (vertical division) we can see that no node is ever stalled or blocked without reading or writing. Additionally, there is a pairing between the reads and the writes, which means that for any given node A, the writes _targetting_ A will be done in the same order as A will do the corresponding reads.
 
 In our tests, the idea works as expected but still there were some cases when a node had to write more data than other nodes some nodes were waiting for it to finish.
 
