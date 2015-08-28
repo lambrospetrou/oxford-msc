@@ -95,6 +95,8 @@ For example, when we want to serialize for node 6 the following vector ID is use
 
 As you can see each node's expanded ID is a vector of size N (number of attributes). Each position _T_ in this vector either has zero if attribute with ID T is _NOT_ among the hashed attributes or has the node's ID in dimension T as specified in the node's multi-dimensional ID.
 
+#### Hashing and HC_Params
+
 #### Algorithms
 
 In this section we present the algorithms behind bit serialization using HyperCube _filtering_.
@@ -117,9 +119,97 @@ For example, assume we are serializing the factorization seen in **Figure X.2** 
 
 It is very important to distinguish between deciding if a value is _valid_ for a node and when it is not. When we are at a union examining the values to be serialized we can reject a value instantly if it does not hash to the proper value to match the node's multi-dimensional ID, thus complete subtrees, but we cannot know for sure if it is valid unless we examine its entire subtree. For example, if _a1_ hashes into one (1) which is valid it might still be invalid for the node we examine if _e2_, which is the other hashed attribute in our example case, does not hash into this node's dimension ID.
 
+In order to make use of this opportunity to skip subtrees we have to keep-track of which values are valid in each union. One way was to create a virtual layer upon the factorization that kept this information, but since this would be inefficient, we decided to use a **Stack** (or simply a vector) to hold each union's state. The states inside the vector after the _masking phase_ is finished should be in the order we are going to visit the valid unions during the serialization phase, which is not too difficult to maintain since we are doing a DFS traversal in both cases.
 
+In the rest of this section we will provide and explain the algorithms for the two phases that implement the _Bit Serializer HyperCube_. As can be seen from the code, we included the masking phase into the first round of _Bit Serializer_ that gathers statistics about maximum values and bits required, therefore we still only do two passes over the factorization.
 
+**Masking phase - statistics gathering**
 
+```
+// Algorithm: dfs_statistics
+
+// @node: a node in the factorization to start serialization (initially root)
+// @fTree: the f-tree used by the current factorization
+// @hc_p: the HyperCube parameters as defined in **Section X.Y**
+//
+// @return: True iff *node contains values to be serialized
+bool dfs_statistics(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
+    // we only serialize Union nodes so we know this is an Operation node
+    Operation *op = (Operation*)node;
+    
+    if (is_multiplication(op)) {
+        if (op->children is empty) return false;
+        bool valid_child = true;
+        for each child attribute CA in op->children {
+            // recurse on each union and make sure all of them are valid
+            valid_child &= dfs_statistics(CA, fTree, hc_p);
+            if (!valid_child) return false;
+        }
+        return true;
+    } else if (is_union(op)){
+        // special treatment for unions since they contain the values to be hashed
+        return handle_union(op);
+    }
+}
+
+//
+// @mMasks: class field - vector that contains the bool masks for each union 
+//
+// @op: the union node in the factorization to gather statistics
+// @fTree: the f-tree used by the current factorization
+// @hc_p: the HyperCube parameters as defined in **Section X.Y**
+//
+// @return: True iff *op contains values to be serialized
+bool dfs_statistics(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
+    // add our bitmask into the states vector/stack
+    mMasks.push_back();
+    // keep reference to our state's position in the vector
+    iMask = mMasks.size() - 1;
+
+    // now we check each value if it is valid and if yes make sure
+    // that its subtree has a valid result too before masking it valid
+    for each value child CV in op->children {
+        // make sure that the value hashes to the right Node dimension ID
+        // if this union is of a hashed-attribute otherwise the value is 
+        // always valid and will be serialized
+        if (is_valid_value(CV, hc_p)) {
+            if (is_leaf_attribute(op->attributeID, fTree)) {
+                // leaf attribute means valid value instantly
+                mMasks[iMask].push_back(true);
+                // also gather statistics about required bits
+                update_required_bits(CV);
+            } else {
+                // this is not a leaf union so we have to make sure
+                // that the subtree contains valid values too
+                if (dfs_statistics(CV, fTree, hc_p)) {
+                    // finally valid value
+                    mMasks[iMask].push_back(true);
+                    update_required_bits(CV);
+                } else {
+                    // the value's subtree is invalid so the value is too
+                    mMasks[iMask].push_back(false);
+                }
+            }
+        } else {
+            mMasks[iMask].push_back(false);
+        }
+    } // end for each value child
+
+    // count the valid children
+    valid_children = count(mMasks[iMask], true);
+
+    // make sure that we have valid values to serialize otherwise
+    // we have to return false such that our parent knows we are invalid
+    if (valid_children == 0) {
+        // remove our state from the masks stack and all of our descentants
+        mMasks.resize(iMask);
+        return false;
+    }
+
+    update_required_union_bits(valid_children);
+    return true;
+}
+```
 
 
 

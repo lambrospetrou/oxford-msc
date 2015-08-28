@@ -9,6 +9,7 @@
 * Finding good Factorization trees (COST function)
     - COST function idea and algorithm
     - estimates calculation algorithm
+    - example with a factorization (calculate estimates, and compute the estimated size with the COST function for several f-trees)
 
 * Serialization of Factorized representation
     - Boost
@@ -34,7 +35,9 @@
     - describe dist\_settings.conf and dist\_query.conf files
 
 * Experiments
-    - COST function (traverse some f-trees in housing-1..8)
+    - COST function 
+        *(traverse some f-trees in housing-1..8)
+        * compare estimated sizes for several f-trees against the real size with those f-trees
     - Compression with serialization on housing-1..15
         * Sanity checks with in-memory and on-disk serialization => diff on enumeration + diff on factorization encoding
         * GZIP, BZIP2 min max, NONE on Serializers vs GZIP, BZIP2, NONE on FLAT 
