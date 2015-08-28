@@ -38,11 +38,7 @@ _Bit Serializer HyperCube_ was designed to accept the following arguments:
 [cost_ftree]: cost-tree.png "Simple Factorization Tree"
 **Figure X.1 - a simple factorization tree.**
 
-![alt text][cost_frep]
-[cost_frep]: cost-rep.png "Simple Factorization"
-**Figure X.2 - a simple data factorization.**
-
-For example, recall the factorization and f-tree we used so far, see **Figures X.1 and X.2**. 
+For example, let's examine the f-tree in **Figure X.1**. 
 
 This f-tree has six attributes, and each attribute internally gets an ID ranging from zero to (N-1), where N in this case equals six. Assume that the IDs for these attributes are as below:
 
