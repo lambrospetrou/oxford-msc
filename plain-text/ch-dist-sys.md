@@ -219,7 +219,7 @@ bool dfs_statistics(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
 
 #### Deserialization
 
-_Bit Serializer HyperCube_ is perfectly compatible with the regular _Bit Deserializer_. Therefore one can use it to deserialize hypercube serializations into factorizations. This is how each node deserializes the data received during the communication rounds in the FDB distributed query processing, see **Chapter U**, into factorizations which are then being processed locally. 
+_Bit Serializer HyperCube_ is perfectly compatible with the regular _Bit Deserializer_. Therefore one can use it to deserialize hypercube serializations into factorizations. This is how each node deserializes the data received into factorizations which are then being processed locally during the communication rounds in the FDB distributed query processing, see **Chapter U**. 
 
 
 
