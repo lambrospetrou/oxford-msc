@@ -82,15 +82,15 @@ Now that all the information is explained let us see the actual arguments used b
 1. factorization to be serialized
 
 2. a bitset of size six with the bits _set_ for attributes A and E
-```
-[ 1 0 0 0 1 0 ]
-```
+    ```
+    [ 1 0 0 0 1 0 ]
+    ```
 
 3. for each node we call the serialize method of the serializer passing in the multi-dimensional node ID expanded to have size of N. 
 For example, when we want to serialize for node 6 the following vector ID is used:
-```
-[ 1 0 0 0 2 0 ]
-```
+    ```
+    [ 1 0 0 0 2 0 ]
+    ```
 
 and when we want to serialize for node 2 the following vector ID is used:
 ```
