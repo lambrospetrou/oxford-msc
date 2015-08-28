@@ -215,7 +215,9 @@ Entry point of the _masking phase_ is the **dfs_statistics()** method which is c
 
 As previously explained, the algorithm cannot determine if a node or value is valid without recursing on its subtree. We also differentiate the two scenarios, a) Multiplication nodes from b) Union nodes in the factorization. When the current node is multiplication we want to make sure that we have valid values in **ALL** the subtrees since a tuple is assembled by the product of these subtrees, thus one of them being empty means no result. If the current node is a union it is treated separately by the **handle_union()** method.
 
+Let us delve into the union handling. First of all, we have to create a union state and put it in the masks stack recording its position in the stack/vector. The reason we want to use an index and we don't always refer to the top state is that we will recurse again so possibly another state will be pushed, hence we need a safe way to access the state for the current union.
 
+The logic behing HyperCube is in the lines following where we iterate over all the current union's values.
 
 
 #### Deserialization
