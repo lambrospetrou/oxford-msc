@@ -95,7 +95,46 @@ For example, when we want to serialize for node 6 the following vector ID is use
 
 As you can see each node's expanded ID is a vector of size N (number of attributes). Each position _T_ in this vector either has zero if attribute with ID T is _NOT_ among the hashed attributes or has the node's ID in dimension T as specified in the node's multi-dimensional ID.
 
+#### Algorithms
+
+In this section we present the algorithms behind bit serialization using HyperCube _filtering_.
+
+Firstly, we provide a pseudocode describing the logic behind HyperCube's application on a factorization. Recall, that HyperCube shuffling hashes the value in each _hashed attribute_ and based on these hashed values sends the whole tuple to the nodes that have their multi-dimensional IDs matching the hashed values, attribute-wise (the hashed value of a column has to match the node's dimension ID on that column).
+
+HyperCube implementation in flat databases handles tuple as a whole, therefore can apply hash functions in all the required attributes and find the matching nodes for the tuple instantly. In our case, factorizations, do not have all the information about a tuple in a single place since each tuple is assembled by retrieving a value from each attribute union along the factorization.
+
+![alt text][cost_frep]
+[cost_frep]: cost-rep.png "Simple Factorization"
+**Figure X.2 - a simple data factorization.**
+
+A naive approach would traverse the factorization, hash the values in each union and send them to each node that matches the hashed value in its multi-dimensional ID. This would lead to incorrect results since a single attribute union cannot determine the destination nodes. In order to be able to decide whether each value in a factorization should be sent to each node we have to make sure that the value exists in at least one tuple that is valid for that node, and we cannot know that before traversing all attribute unions in the factorization.
+
+As a result, our algorithm consists of two phases, namely the _masking phase_ and the _serialization phase_. During the _masking phase_ we create bitset masks for each union denoting whether each value is valid to be sent to the examined node, and during the _serialization phase_ the valid values are serialized in the exact way _Bit Serializer_ works, see **Section X.Y**.
+
 #### Deserialization
 
 _Bit Serializer HyperCube_ is perfectly compatible with the regular _Bit Deserializer_ therefore one can use that to deserialize hypercube serializations into factorizations. This is how each node deserializes the data received during the communication rounds into factorizations which are then being processed locally.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
