@@ -160,7 +160,7 @@ bool dfs_statistics(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
 // @hc_p: the HyperCube parameters as defined in **Section X.Y**
 //
 // @return: True iff *op contains values to be serialized
-bool dfs_statistics(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
+bool handle_union(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
     // add our bitmask into the states vector/stack
     mMasks.push_back();
     // keep reference to our state's position in the vector
@@ -211,8 +211,9 @@ bool dfs_statistics(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
 }
 ```
 
+Entry point of the _masking phase_ is the **dfs_statistics()** method which is called initially with the root of the factorization and recursively visits all other nodes.
 
-
+As previously explained, the algorithm cannot determine if a node or value is valid without recursing on its subtree. We also differentiate the two scenarios, a) Multiplication nodes from b) Union nodes in the factorization. When the current node is multiplication we want to make sure that we have valid values in **ALL** the subtrees since a tuple is assembled by the product of these subtrees, thus one of them being empty means no result. If the current node is a union it is treated separately by the **handle_union()** method.
 
 
 
