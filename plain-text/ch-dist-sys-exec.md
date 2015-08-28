@@ -31,7 +31,7 @@ We will present the steps to process a single round evaluation first which is th
 
 1. we start by loading the input factorization in memory (using the configuration files to locate them)
 2. we signal ReaderData to start accepting factorizations from other workers and give the inputs to WriterData to start writing data to other workers
-3. once all factorizations from other workers have been received, we drop the empty ones and use the special *merge\_same* operator to merge the partial factorizations received into a single factorization
+3. once all factorizations from other workers have been received, we drop the empty ones and use the special *merge\_same* operator to merge the partial factorizations received into a single factorization (recall that all factorizations sent in the same round use the same f-tree)
 4. we now are at the last step of the processing where we read from the query configuration file the f-plan operations and using the *f-plan executor* we evaluate the query on the local factorization
 5. notify master node that we finished query execution
 
