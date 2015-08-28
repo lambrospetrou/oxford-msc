@@ -24,7 +24,7 @@ In this section, we briefly introduce the HyperCube algorithm [**REFERENCE**] th
 
 ### Bit Serializer HyperCube
 
-_Bit Serializer HyperCube_'s main purpose is to be used during the communication stages in distributed query processing. Each node needs to send data over the wire to other nodes, therefore we use this special serializer to take into account recepient's node IDs and serialize only the fraction of the factorization required.
+_Bit Serializer HyperCube_'s main purpose is to be used during the communication stages in FDB distributed query processing. Each node needs to send data over the wire to other nodes, therefore we use this special serializer to take into account recepient's node IDs and serialize only the fraction of the factorization required.
 
 #### Arguments
 
