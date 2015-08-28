@@ -16,6 +16,8 @@ This chapter contains description of a system designed to work across a cluster 
 
 ## HyperCube on factorizations
 
-// see the dist-sys-hypercube.md file
+// see the ch-dist-sys-hypercube.md file
 
+## System Architecture
 
+// see the ch-dist-sys-arch.md

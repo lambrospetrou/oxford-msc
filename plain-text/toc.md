@@ -22,11 +22,11 @@
     - Bit Serializer HyperCube (Bit Serializer extended with HyperCube filtering)
         * HyperCube algorithm description
         * Bit Serializer HyperCube algorithms
+    - master & worker design following custom protocol
+    - Communication issues (Ordered reading and writing) and design with ReaderData and WriterData threads
     - Single round vs Multi round (they have the same issues)
         * Multi round is like a repeat execution of Single round but for a subset of the query
         * emphasize that the f-plans in each round can be anything and the distribution of data is done on 1 attribute at a time (but can easily be extended)
-    - master & worker design following custom protocol
-    - Communication issues (Ordered reading and writing) and design with ReaderData and WriterData threads
     - execution phase details
         * Reading inputs, applying initial f-plans
             - maybe describe the merge under common root algorithm
