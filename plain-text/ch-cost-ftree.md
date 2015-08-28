@@ -4,19 +4,19 @@
 
 Previous work on Factorized Databases (**REFERENCE HERE**) provides searching for a good factorization tree (f-tree) upon a database based on asymptotic bounds and the size of the input. It has been proven to be optimal, many times generating exponentially more compressed representations than normal flat relational databases.
 
-Although complexity bounds are nice, there are a lot of cases where they are not sufficient and we need more explicit properties. For example, given a database Q, the previous work might find that the optimal f-tree has an s(Q) = 2, where s(Q) is the cost measurement function, and that there are multiple trees with this property. But the question is which of those f-trees having s(Q) = 2 is better ? At the moment, the implementation just uses the _first_ f-tree that has the optimal s(Q). 
+Although complexity bounds are nice, there are a lot of cases where they are not sufficient and we need more explicit properties. For example, given a database Q, the previous work might find that the optimal f-tree has parameter s(Q) = 2, where s(Q) is the cost measurement function, and that there are multiple trees with this property. But the question is which of those f-trees having parameter s(Q) = 2 is better ? At the moment, the implementation just uses the _first_ f-tree that has the optimal parameter s(Q). 
 
 What we really want to investigate is how to find a good f-tree, using more refined parameters, that will also depend on the _data_ we want to factorize and not only on the f-tree structure which ignores data (except relation sizes). The reason why this is an important part of the project is that in a distributed system, **see discussion in experiments Section X.Y**, the biggest bottleneck is communication and data distribution. Therefore, although s(Q) provides optimal trees we want to minimize communication cost, thus requiring an f-tree that results in the smallest factorization size possible.
 
-For example, In real-world scenarios it can happen that two f-trees have the same s(Q) property, let's say 2, but they might differ in size with a factor of 4x. More precisely, f-tree A can produce a factorization with 1 million singletons (value nodes) where f-tree B can produce a factorization of 4 million singletons. Asymptotically, we cannot discriminate the two, but in real life using f-tree B will result in excessive data distribution thus increasing our communication cost a lot, so it does matter in the end-to-end processing.
+For example, In real-world scenarios it can happen that two f-trees have the same s(Q) parameter, let's say 2, but they might differ in size with a factor of 4x. More precisely, f-tree A can produce a factorization with 1 million singletons (value nodes) where f-tree B can produce a factorization of 4 million singletons. Asymptotically, we cannot discriminate the two, but in real life using f-tree B will result in excessive data distribution thus increasing our communication cost a lot, so it does matter in the end-to-end processing.
 
 ## Contribution
 
-This chapter's contribution is a _COST_ function that given an f-tree and certain statistics returns an estimation of the total factorization size (number of singletons, value nodes) that would occur if our database (factorization) was factorized based on that given f-tree.
+This chapter's contribution is a _COST_ function that given an f-tree and certain statistics (number of unique values per attribute, number of unique values per attribute under any other attribute of the f-tree) returns an estimation of the total factorization size (number of singletons, value nodes) that would occur if our database (factorization) was factorized based on that given f-tree.
 
 ## Idea
 
-The requirement is to have a cost function that would take into account the real data of a database instance in order to be able to compare in a more precise manner f-trees that are asymptotically optimal.
+The requirement is to have a cost function that would take into account the actual values of a database instance in order to be able to compare in a more precise manner f-trees that are asymptotically optimal.
 
 Let's start with some facts about FDB factorizations:
 
@@ -25,7 +25,7 @@ Let's start with some facts about FDB factorizations:
 3. a factorization may have many relation dependencies and each dependency forces its attributes to exist along a single path in the f-tree (like a linear linked list)
 4. some attributes belong to many relations, thus have many dependencies
 
-Considering the above facts, we used the number of unique values per union, therefore easily finding unique values per attribute. Additionally, the dependencies matter a lot since in complex queries like _triangles_ or _squares_, see figure X.3,  we have all the attributes in a single path, forming a single linked list and each level down the path affects the factorization size.
+Considering the above facts, we used the number of unique values per union, therefore easily finding unique values per attribute. Additionally, the dependencies matter a lot since in complex queries like _triangles_ or _squares_, see Figure X.3,  we have all the attributes in a single path, forming a single linked list and each level down the path affects the factorization size.
 
 ![alt text][cost_ftree]
 [cost_ftree]: cost-tree.png "Simple Factorization Tree"
@@ -39,7 +39,7 @@ Considering the above facts, we used the number of unique values per union, ther
 [cost_ftree-tr-sq]: ftree-triangle-square.png "Triangle and Square queries"
 **Figure X.3 - f-trees for triangle and square queries.**
 
-We define _cost_ of a factorization the total number of value nodes or singletons, thus the sum of the number of value nodes for each attribute. For example the factorization in **figure X.2** has 20 value nodes (black nodes) so the cost for that f-tree is 20.
+We define _cost_ of a factorization the total number of value nodes or singletons, thus the sum of the number of value nodes for each attribute. For example the factorization in **Figure X.2** has 20 value nodes (black nodes) so the cost for that f-tree is 20.
 
 ### Initial ideas
 
@@ -49,14 +49,14 @@ Given an f-tree and its factorization, we calculate for each attribute the avera
 
 **Notation** 
 
-1. I use _XuY_ to denote the average number of unique values of attribute X _under_ a single value of attribute Y, where Y is an ancestor of X.
-2. I use _uniq(X)_ to denote the average unique number of values among all the unions of attribute X.
+1. _XuY_ denotes the average number of unique values of attribute X _under_ a single value of attribute Y, where Y is an ancestor of X.
+2. _uniq(X)_ denotes the average unique number of values among all the unions of attribute X.
 
-For example, assuming the f-tree in figure X.1 and its factorization (figure X.2), we have the following statistics:
+For example, assuming the f-tree in Figure X.1 and its factorization (see Figure X.2), we have the following statistics:
 
 ```
-uniq(A), uniq(B), uniq(C), uniq(D), uniq(E), uniq(F)
-BuA, CuA, CuB, DuA, DuB, EuA, FuA, FuE
+number unique values per attribute: uniq(A), uniq(B), uniq(C), uniq(D), uniq(E), uniq(F)
+number of unique values per attribute under an ancestor: BuA, CuA, CuB, DuA, DuB, EuA, FuA, FuE
 ```
 
 Having the above statistics calculated, given any other f-tree _T_ the estimated size of the factorization would be calculated by summing the estimated number of nodes for each attribute. To calculate the cost for an attribute X, a path between X and its parent in T should be found inside the reference tree, followed by the multiplication of all the pair-wise averages (XuY) along the path to get an estimation for the number of values of X.
@@ -67,7 +67,7 @@ This approach quickly turned out to be wrong and over-estimating because of the 
 
 The final solution is based on the same intuition but in a more precise and more accurate way. Instead of depending on estimates of a reference tree which lead to artificial over-estimation, statistics such that we can use them with any f-tree should be calculated, regardless of the input f-tree. Recall that our _cost_ function should be able to accept an arbitrary f-tree and return the estimation size as accurate as possible.
 
-As a result, the following properties are used during estimation:
+As a result, the following properties (statistics) are used during estimation:
 
 1. average number of unique values of attribute X under any attribute Y (single value of Y), again denoted as _XuY_, where Y is an ancestor of X.
 2. average unique number of values among all union nodes for each attribute, again denoted as _uniq(X)_ where X is an attribute.
@@ -98,7 +98,7 @@ Additionally, we restrict the estimation size of the number of values per attrib
 
 ## Algorithms
 
-In this section I will provide the pseudocode for the complete factorization size estimation procedure that implements the _COST_ function described above.
+In this section the pseudocode for the complete factorization size estimation procedure is provided that implements the _COST_ function described above.
 
 ### Estimate Factorization Size
 
@@ -152,7 +152,7 @@ The above algorithm calculates the estimated size of the representation that wil
 
 The complexity of the algorithm is quadratic to the number of attributes in the factorization tree, **O(N^2)** since we visit each attribute exactly once and for each attribute we call the *min_average()* function which has linear complexity, or more precisely its complexity depends on the longest root-to-leaf path (we visit each attribute's ancestor in the f-tree).
 
-For the sake of completion I provide below pseudocode for the *min_averages()* function.
+For the sake of completion the pseudocode for the *min_averages()* function is provided below.
 
 ```
 // @fTree: the factorization tree we currently estimate the size
@@ -183,10 +183,10 @@ The maximum amount of children (unique values) of any attribute under any other 
 
 ### Calculate averages
 
-The previous algorithm that estimates factorization size assumes existence of the averages _XuY_ for each pair of attributes in the same hyperedge (relation/dependency). I implemented a function that calculates this but it is code-specific to be included in the thesis so I will only provide a pseudocode for it showing the idea behind it.
+The previous algorithm that estimates factorization size assumes existence of the averages _XuY_ for each pair of attributes in the same hyperedge (relation/dependency). A procedure was implemented that calculates this but it is code-specific to be included in the thesis so we only provide a pseudocode for it showing the idea behind it.
 
 The function returns a two-dimensional matrix with size (N x N), where is the number of attributes.
-Matrix[X][Y] corresponds to the notation I used above, XuY, which means that cell located at row X and column Y has the average number of children (unique values) among all unions of attribute X which are located below each value of the attribute Y.
+Matrix[X][Y] corresponds to the notation used above, XuY, which means that cell located at row X and column Y has the average number of children (unique values) among all unions of attribute X which are located below each value of the attribute Y.
 
 ```
 // @fTree: the factorization tree used for the representation '@fRep'
@@ -209,7 +209,7 @@ void calculate_averages(FactorizationTree *fTree, FRepresentation *fRep) {
 }
 ```
 
-The above algorithm's runtime could be improved but it is orthogonal to the project and only used during the off-line pre-processing of the database instance to generate the averages, thus it is not a big of a concern not being optimal. 
+The above algorithm's runtime could be improved but it is orthogonal to the project and only used during the off-line pre-processing of the database instance to generate the averages, thus its suboptimality is not a serious concern. 
 
 The real need was to provide a fast cost function that during runtime could determine the size of the factorization given an arbitrary f-tree.
 
