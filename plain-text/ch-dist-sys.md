@@ -97,6 +97,16 @@ As you can see each node's expanded ID is a vector of size N (number of attribut
 
 #### Hashing and HC_Params
 
+HyperCube's performance gains depend on value hashing and proper use of hash functions. In this project we decided to use the same hash functions as existing work that showed good results [**Suciu**] in order to allow us to compare in the future our results with theirs.
+
+The hashing library used is **MurmurHash3** which is open-source and available online. This libary provides methods that given a series of bytes create hash values of size 128-bits and 32-bits. We decided to use the 128-bit version and just use the first 64-bits (starting from the Least-Significant-Bit).
+
+Additionally, these hash functions accept a _seed index_ as argument which affects the result hash values. In order for the HyperCube to work as expected we need to use the **same** seed index for attributes that are to be joined together, or attributes that are named differently in the factorization but represent the same logical attribute. In addition, it would be better to use different seed indices for different joined attributes to avoid distribution issues that might result in skeweing of data partitioning and shuffling. Therefore, we have a pool of some seed indices that are given to each hashed attribute (seeds taken from online prime number resources and previous work on HyperCube).
+
+**HC_Params**
+
+The structure **hc_params** is the structured passed in the serialize function of _Bit Serializer HyperCube_ and contains the three arguments described in the previous **Section XX** and allows the serializer to use the right hash function for each attribute value during validity check.
+
 #### Algorithms
 
 In this section we present the algorithms behind bit serialization using HyperCube _filtering_.
