@@ -123,7 +123,7 @@ In order to make use of this opportunity to skip subtrees we have to keep-track 
 
 In the rest of this section we will provide and explain the algorithms for the two phases that implement the _Bit Serializer HyperCube_. As can be seen from the code, we included the masking phase into the first round of _Bit Serializer_ that gathers statistics about maximum values and bits required, therefore we still only do two passes over the factorization.
 
-**Masking phase - statistics gathering**
+**Masking phase - statistics gathering - first pass**
 
 ```
 // Algorithm: dfs_statistics
@@ -225,7 +225,7 @@ During the serialization process we do a DFS traversal on the factorization and 
 
 To complete the union handling, the function just updates the required bits for the union children counter in case it is valid and return success to its caller.
 
-**serialization phase**
+**Serialization phase - second pass**
 
 The second phase, the serialization, of our algorithm is identical to the second phase of the regular _Bit Serializer_. The only difference is that instead of serializing all the values in each union we use its mask state to identify the valid children and serialize those only. Respectively, recurse on them only. 
 Each union just takes the next available mask state from the states vector, starting from index 0 moving upwards. 
