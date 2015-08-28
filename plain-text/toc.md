@@ -36,9 +36,12 @@
 * Experiments
     - COST function (traverse some f-trees in housing-1..8)
     - Compression with serialization on housing-1..15
+        * Sanity checks with in-memory and on-disk serialization => diff on enumeration + diff on factorization encoding
         * GZIP, BZIP2 min max, NONE on Serializers vs GZIP, BZIP2, NONE on FLAT 
     - Communication cost 
     - End-to-End Computation time (centralized FDB vs nodes 4, nodes 6, nodes 8)
+        * whole execution phase monitored by Master node so the time is accurate end-to-end
+        * each node reports its own times too
 
 * Future Work
     - Extension to the Bit serializer to provide custom serializer for certain data types (negative numbers, doubles, strings) to allow further compression
