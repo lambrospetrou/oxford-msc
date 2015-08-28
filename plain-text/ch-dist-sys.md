@@ -225,6 +225,17 @@ During the serialization process we do a DFS traversal on the factorization and 
 
 To complete the union handling, the function just updates the required bits for the union children counter in case it is valid and return success to its caller.
 
+**serialization phase**
+
+The second phase, the serialization, of our algorithm is identical to the second phase of the regular _Bit Serializer_. The only difference is that instead of serializing all the values in each union we use its mask state to identify the valid children and serialize those only. Respectively, recurse on them only. 
+Each union just takes the next available mask state from the states vector, starting from index 0 moving upwards. 
+
+**Complexity**
+
+The complexity of serializing a factorization using _Bit Serializer HyperCube_ and _Bit Serializer_ is asymptotically the same. They both incorporate two passes over the whole factorization.
+
+The HyperCube version, however, has the additional overhead of hashing the values in unions of hashed attributes which is constant overhead but stills adds up to the total processing time. Furthermore, this version might skip certain subtrees when values are invalid which can speed up the second phase significantly. Both points affect runtime of the HyperCube serialization but it strictly depends on each factorization's values and the number of hashed attributes whether it has better or worse performance.
+
 
 #### Deserialization
 
