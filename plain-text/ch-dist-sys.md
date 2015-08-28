@@ -44,7 +44,7 @@ _Bit Serializer HyperCube_ was designed to accept the following arguments:
 
 For example, recall the factorization and f-tree we used so far, see **Figures X.1 and X.2**. 
 
-This f-tree has six (6) attributes, and each attribute internally gets an ID ranging from zero to (N-1), where N in this case equals six. Assume that the IDs for these attributes are as seen below:
+This f-tree has six attributes, and each attribute internally gets an ID ranging from zero to (N-1), where N in this case equals six. Assume that the IDs for these attributes are as below:
 
 ```
 ID(A) = 0
@@ -57,7 +57,7 @@ ID(F) = 5
 
 Moreover, let us consider that we want to use HyperCube and hash on attributes _A_ and _E_, and that our cluster contains 6 nodes.
 
-There are four (4) possible HyperCube configurations in order to use all nodes and are shown below. Notation _K x M_ means that we assign a dimension of size _K_ to attribute A and a dimension of size _M_ to attribute E.
+There are four possible HyperCube configurations in order to use all nodes, all shown below. Notation _K x M_ means that we assign a dimension of size _K_ to attribute A and a dimension of size _M_ to attribute E.
 
 ```
 Conf 1: 1 x 6
@@ -66,9 +66,7 @@ Conf 3: 2 x 3
 Conf 4: 3 x 2
 ```
 
-Configuration four (Conf 4) will be used for the rest of this example, _3 x 2_.
-
-In addition, each node will be assigned a **multi-dimensional ID** based on the HyperCube configuration used. For this example the node IDs are as seen below (basically we iterate over all possible values in each dimension):
+In addition, each node will be assigned a **multi-dimensional ID** based on the HyperCube configuration used. For this example, let's use third HyperCube configuration (Conf 3), thus creating the node IDs below (basically we iterate over all possible values in each dimension).
 
 ```
 Node 1: [0, 0]
@@ -83,7 +81,7 @@ Now that all the information is explained let us see the actual arguments used b
 
 1. factorization to be serialized
 
-2. a bitset of size six with the bits enabled for attributes A and E
+2. a bitset of size six with the bits _set_ for attributes A and E
 ```
 [ 1 0 0 0 1 0 ]
 ```
