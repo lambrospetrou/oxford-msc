@@ -18,7 +18,7 @@ Moreover, the system can be used entirely on a single machine and use separate p
 
 All configuration options about the topology (master, worker nodes) and the query to be processed are specified using two simple configuration files, see **Section X**.
 
-### System message protocol
+### System protocol
 
 The system, once given a distributed query processing request, starts the _distributed runner_ in each site (node). This is a special class that determines whether the running process is a master or a worker and initiates distributed execution.
 
@@ -30,7 +30,7 @@ The distributed execution of a query has the four stages explained below.
     The master node on the other side upon starting, waits to receive N _hello_ messages, where N is the number of worker nodes. As soon as the master receives all handshakes, it sends to all workers a message to initiate the next stage, _Connection Establishment_.
 
 2. **Connection establishment**
-    In this stage each node establishes TCP connection with all other nodes, in order to be able to send and receive messages without establishing new connections every single time.
+    In this stage each worker node establishes TCP connection with all other workers, in order to be able to send and receive messages without establishing new connections every single time during the query execution.
     When a node receives the _Connection Establishment_ initiation message, it spawns a new thread/process and runs the **WriterData** (see following Section) which is going to initiate connection to the _ReaderData_ of all the worker nodes in the cluster. When all the connections have been established and cached each worker sends a _ConnectionEstablishmentFinished_ message to the master and blocks.
     The master again just waits to receive N _ConnectionEstablishmentFinished_ messages and once it does it broadcasts the _QueryExecution_ message to signal initiation of the next stage.
 
