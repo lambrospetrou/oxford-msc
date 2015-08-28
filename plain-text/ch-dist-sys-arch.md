@@ -43,5 +43,6 @@ The distributed execution of a query has the four stages explained below.
     This is the stage where any communication of information regarding the partial results on each worker should be made. For example, each worker can send a path to the master node where the partial query result is located.
     Moreover, this stage is the final stage of the distributed query processing so the workers can do any cleanup and terminate gracefully.
 
+The whole query processing is done in stage 3, including data partitioning, shuffling and f-plan execution on local factorizations. The rest stages were required for bootstrapping purposes of the system and in a real-world scenario where a cluster of nodes is already up and running they would not even exist. Therefore, it is nice to have the query processing isolated in order to be able to reason correctly about each processing phase and also about the end-to-end experience of the system which can easily be measured on the master node.
 
-
+ 
