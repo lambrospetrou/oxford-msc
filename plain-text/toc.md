@@ -4,22 +4,24 @@
 * Introduction
 
 * Preliminaries (just briefly mention previous work ???)
-    - introduce factorized databases and Hypercube (with Murmur hash functions etc). There, you need to cite relevant literature.
+    - introduce factorized databases
 
 * Finding good Factorization trees (COST function)
-    - COST function idea and algorithm
-    - estimates calculation algorithm
+    - done|| COST function idea and algorithm
+    - done|| estimates calculation algorithm
     - example with a factorization (calculate estimates, and compute the estimated size with the COST function for several f-trees)
 
 * Serialization of Factorized representation
-    - Boost
-    - Simple Serializer (Binary)
-    - Byte Serializer (required bytes only)
-    - Bit Serializer (required bits only)
+    - done|| Boost
+    - done|| Simple Serializer (Binary)
+    - done|| Byte Serializer (required bytes only)
+    - done|| Bit Serializer (required bits only)
         * Bitstream implementation
 
 * Distributed system
     - Bit Serializer HyperCube (Bit Serializer extended with HyperCube filtering)
+        * HyperCube algorithm description
+        * Bit Serializer HyperCube algorithms
     - Single round vs Multi round (they have the same issues)
         * Multi round is like a repeat execution of Single round but for a subset of the query
         * emphasize that the f-plans in each round can be anything and the distribution of data is done on 1 attribute at a time (but can easily be extended)
