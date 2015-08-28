@@ -25,17 +25,17 @@
         * Bit Serializer HyperCube algorithms
     - done|| master & worker design following custom protocol
     - done|| Communication issues (Ordered reading and writing) and design with ReaderData and WriterData threads
-    - Single round vs Multi round (they have the same issues)
+    - done|| Single round vs Multi round (they have the same issues)
         * Multi round is like a repeat execution of Single round but for a subset of the query
         * emphasize that the f-plans in each round can be anything and the distribution of data is done on 1 attribute at a time (but can easily be extended)
-    - execution phase details
+    - done|| execution phase details
         * Reading inputs, applying initial f-plans
             - maybe describe the merge under common root algorithm
         * Partitioning and distribution of data (single factorization message per node)
         * Merge received factorizations (describe the algorithm for merge_same_tree)
         * apply query f-plan for current round
         * repeat if in Multi round execution
-    - describe dist\_settings.conf and dist\_query.conf files
+    - done|| describe dist\_settings.conf and dist\_query.conf files
 
 * Experiments
     - COST function 
