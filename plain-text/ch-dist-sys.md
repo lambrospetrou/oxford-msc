@@ -129,7 +129,7 @@ For example, assume we are serializing the factorization seen in **Figure X.2** 
 
 It is very important to distinguish between deciding if a value is _valid_ for a node and when it is not. When we are at a union examining the values to be serialized we can reject a value instantly if it does not hash to the proper value to match the node's multi-dimensional ID, thus complete subtrees, but we cannot know for sure if it is valid unless we examine its entire subtree. For example, if _a1_ hashes into one (1) which is valid it might still be invalid for the node we examine if _e2_, which is the other hashed attribute in our example case, does not hash into this node's dimension ID.
 
-In order to make use of this opportunity to skip subtrees we have to keep-track of which values are valid in each union. One way was to create a virtual layer upon the factorization that kept this information, but since this would be inefficient, we decided to use a **Stack** (or simply a vector) to hold each union's state. The states inside the vector after the _masking phase_ is finished should be in the order we are going to visit the valid unions during the serialization phase, which is not too difficult to maintain since we are doing a DFS traversal in both cases.
+In order to make use of this opportunity to skip subtrees we have to keep-track of which values are valid in each union. One way was to create a virtual layer upon the factorization that kept this information, but since this would be inefficient, we decided to use a **vector** to hold each union's state. The states inside the vector after the _masking phase_ is finished should be in the order we are going to visit the valid unions during the serialization phase, which is not too difficult to maintain since we are doing a DFS traversal in both cases.
 
 In the rest of this section we will provide and explain the algorithms for the two phases that implement the _Bit Serializer HyperCube_. As can be seen from the code, we included the masking phase into the first round of _Bit Serializer_ that gathers statistics about maximum values and bits required, therefore we still only do two passes over the factorization.
 
@@ -171,7 +171,7 @@ bool dfs_statistics(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
 //
 // @return: True iff *op contains values to be serialized
 bool handle_union(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
-    // add our bitmask into the states vector/stack
+    // add our bitmask into the states vector
     mMasks.push_back();
     // keep reference to our state's position in the vector
     iMask = mMasks.size() - 1;
@@ -211,7 +211,7 @@ bool handle_union(FRepNode *node, FactorizationTree *fTree, hc_params *hc_p) {
     // make sure that we have valid values to serialize otherwise
     // we have to return false such that our parent knows we are invalid
     if (valid_children == 0) {
-        // remove our state from the masks stack and all of our descentants
+        // remove our state from the masks vector and all of our descentants
         mMasks.resize(iMask);
         return false;
     }
@@ -225,11 +225,11 @@ Entry point of the _masking phase_ is the **dfs_statistics()** method which is c
 
 As previously explained, the algorithm cannot determine if a node or value is valid without recursing on its subtree. We also differentiate the two scenarios, a) Multiplication nodes from b) Union nodes in the factorization. When the current node is multiplication we want to make sure that we have valid values in **ALL** the subtrees since a tuple is assembled by the product of these subtrees, thus one of them being empty means no result. If the current node is a union it is treated separately by the **handle_union()** method.
 
-Let us delve into the union handling. First of all, we have to create a union state and put it in the masks stack recording its position in the stack/vector. The reason we want to use an index and we don't always refer to the top state is that we will recurse again so possibly another state will be pushed, hence we need a safe way to access the state for the current union.
+Let us delve into the union handling. First of all, we have to create a union state and put it in the masks vector recording its index position. The reason we want to use an index and we don't always refer to the top state is that we will recurse again so possibly another state will be pushed, hence we need a safe way to access the state for the current union.
 
 The logic behing HyperCube is in the lines following where we iterate over all the current union's values (**Lines XX**). For each value _CV_ we first check if it is a valid value. The validity of a value depends on whether this is a union of a hash-attribute or not. If it isn't then the value is valid, otherwise the hashed value is checked against the multi-dimensional ID of the node (use of the *hc_params*). If the value is not valid then we append into our mask-state a _false_ bit and continue to the next child immediately, thus skipping its subtree. If the value itself is valid, then we have to make sure that its subtree is valid before marking it as _true_, therefore if there is a subtree (not leaf attribute) we recurse and check the returned result for success and mask the current value accordingly.
 
-Whenever the value is valid, we also calculate and update the required bits required for that attribute. When all the children have been processed we have to ensure that this union has at least one valid value, otherwise it should not be serialized. If it has not, then we return false. It is very important to understand the reason why the stack is being resized to match the current union's index (_iMask_). Observing the traversal over the values and the recursion calls it is easy to see that we do a DFS-like traversal over the factorization. However, not all nodes will be visited since at any point one node might be invalid and therefore instantly return false to its parent, hence propagating the failure upwards to the current union. Therefore the number of states pushed into the masks stack is undetermined and can range from _zero_ to the _number of nodes in the subtree_ of each value. When the current union is invalid (children list empty) it means that none of our valid children (if any) will be serialized in the result, therefore their states need to be removed from the stack. 
+Whenever the value is valid, we also calculate and update the required bits required for that attribute. When all the children have been processed we have to ensure that this union has at least one valid value, otherwise it should not be serialized. If it has not, then we return false. It is very important to understand the reason why the states vector is being resized to match the current union's index (_iMask_). Observing the traversal over the values and the recursion calls it is easy to see that we do a DFS-like traversal over the factorization. However, not all nodes will be visited since at any point one node might be invalid and therefore instantly return false to its parent, hence propagating the failure upwards to the current union. Therefore the number of states pushed into the masks vector is undetermined and can range from _zero_ to the _number of nodes in the subtree_ of each value. When the current union is invalid (children list empty) it means that none of our valid children (if any) will be serialized in the result, therefore their states need to be removed from the vector. 
 
 During the serialization process we do a DFS traversal on the factorization and each time a union node is encountered we get the first available state from the vector and serialize recursively only the valid values. Therefore, the states vector should only contain masks for the unions that are valid to be serialized and in the order they will be serialized.
 
