@@ -99,7 +99,7 @@ As you can see each node's expanded ID is a vector of size N (number of attribut
 
 In this section we present the algorithms behind bit serialization using HyperCube _filtering_.
 
-Firstly, we provide a pseudocode describing the logic behind HyperCube's application on a factorization. Recall, that HyperCube shuffling hashes the value in each _hashed attribute_ and based on these hashed values sends the whole tuple to the nodes that have their multi-dimensional IDs matching the hashed values, attribute-wise (the hashed value of a column has to match the node's dimension ID on that column).
+Recall, that HyperCube shuffling hashes the value in each _hashed attribute_ and based on these hashed values sends the whole tuple to the nodes that have their multi-dimensional IDs matching the hashed values, attribute-wise (the hashed value of a column has to match the node's dimension ID on that column).
 
 HyperCube implementation in flat databases handles tuple as a whole, therefore can apply hash functions in all the required attributes and find the matching nodes for the tuple instantly. In our case, factorizations, do not have all the information about a tuple in a single place since each tuple is assembled by retrieving a value from each attribute union along the factorization.
 
@@ -111,7 +111,11 @@ A naive approach would traverse the factorization, hash the values in each union
 
 As a result, our algorithm consists of two phases, namely the **masking phase** and the **serialization phase**. During the _masking phase_ we create bitset masks for each union denoting whether each value is valid to be sent to the examined node, and during the _serialization phase_ the valid values are serialized in the exact way _Bit Serializer_ works, see **Section X.Y**.
 
+An important optimization we noticed in the algorithm is that during the second phase there is no need to visit unions that do not have any valid values to be serialized. Therefore, a is lot of gain time-wise since we might skip complete branches from the top-most point we notice that a value is invalid.
 
+For example, assume we are serializing the factorization seen in **Figure X.2** and the node we examine has the multi-dimensional ID `[ 1 0 0 0 1 0]`. If the value **a1** hashes into zero (0) then we know that the whole branch under _a1_ should not be visited since it will be not serialized for this node.
+
+It is very important to distinguish between deciding if a value is _valid_ for a node and when it is not. When we are at a union examining the values to be serialized we can reject a value instantly if it does not hash to the proper value to match the node's multi-dimensional ID, thus complete subtrees, but we cannot know for sure if it is valid unless we examine its entire subtree. For example, if _a1_ hashes into one (1) which is valid it might still be invalid for the node we examine if _e2_, which is the other hashed attribute in our example case, does not hash into this node's dimension ID.
 
 
 
