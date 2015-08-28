@@ -20,6 +20,10 @@ This chapter contains description of a system designed to work across a cluster 
 
 // see the ch-dist-sys-hypercube.md file
 
-## System Architecture
+## System architecture
 
 // see the ch-dist-sys-arch.md
+
+# Query processing
+
+// see the ch-dist-sys-exec.md
