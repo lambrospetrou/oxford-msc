@@ -55,6 +55,8 @@ To make this clear, we can see from our example that all tuples from relation R 
 
 HyperCube's advantage over other shuffle techniques (i.e. hashing an attribute to all nodes) is that it is more resiliant to data load imbalance (a.k.a skew) since it is more difficult to send the same value for a column to the same node since it depends on the other hashed columns too.
 
+The intuition to HyperCube's correctness is that since we use the same hash function to hash values of the same attribute/column, then all required tuples to evaluate correctly the JOIN will end up in the same node. The _wildcard_ is used to ensure that even if a tuple does not contain a hashed attribute it will be sent to the nodes for the missing dimension since they might need that tuple based on the values on the present attributes.
+
 The methodology to identify the proper values for _ND_ number of factors/dimensions and the size of each dimension are not part of this project, thus not presented here. In experiments, we used the query configuration files to specify the HyperCube dimensions required for the query we wanted to evaluate.
 
 ### Bit Serializer HyperCube

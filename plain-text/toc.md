@@ -19,7 +19,7 @@
         * Bitstream implementation
 
 * Distributed system
-    - Bit Serializer HyperCube (Bit Serializer extended with HyperCube filtering)
+    - done|| Bit Serializer HyperCube (Bit Serializer extended with HyperCube filtering)
         * HyperCube algorithm description
         * Why HyperCube works or why Bit Serializer Hypercube works ???
         * Bit Serializer HyperCube algorithms
