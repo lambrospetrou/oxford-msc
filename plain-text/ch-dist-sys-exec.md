@@ -117,7 +117,7 @@ In this simple example the ordering could be determined dynamically in runtime s
 0
 
 # final F-PLANs to be applied on the inputs
-# number of plans (each plan for each communication round)
+# number of plans (one plan for each communication round)
 1
 
 7
@@ -133,8 +133,6 @@ end
 # a single line will contain all the attribute names of the combined result
 # which will give each attribute a GLOBAL ID (their position in the line)
 # which is used internally to map the attributes from local representations.
-# the attributes as would specified in a global f-tree
-# A,B,C,D,E,F
 date,locn,ksnid,inventoryunits,salenbr,datesales,locn_3,loyalty,ksnid_3,regprice,units,locn_1,ksnid_1,mrkdnbegdt,mrkdnenddt,mrkdnamt,idpro,atvstadt,atvenddt,atvsts,ksnid_2,locn_2,__g_root_
 
 # the hashed columns should be specified now starting from 0 to N using the
