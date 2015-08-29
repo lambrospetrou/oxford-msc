@@ -14,12 +14,12 @@ _Bit Serializer HyperCube_'s main purpose is to be used during the communication
 
 Before explaining the arguments of the algorithm we explain some important topics used thourghout this chapter, using an example f-tree, see **Figure X.1**.
 
-![alt text][cost_ftree]
-[cost_ftree]: cost-tree.png "Simple Factorization Tree"
+![alt text][cost-ftree-example]
+[hc-ftree-example]: hc-ftree-example.png "Example f-tree"
 **Figure X.1 - a simple factorization tree.**
 
 
-This f-tree has six attributes, and each attribute internally gets an ID ranging from zero to (N-1), where N in this case equals six. Assume that the IDs for these attributes are as below:
+This f-tree has five attributes, and each attribute internally gets an ID ranging from zero to (N-1), where N in this case equals five. Assume that the IDs for these attributes are as below:
 
 ```
 ID(A) = 0
@@ -27,10 +27,9 @@ ID(B) = 1
 ID(C) = 2
 ID(D) = 3
 ID(E) = 4
-ID(F) = 5
 ```
 
-Moreover, let us consider that we want to use HyperCube and hash on attributes _A_ and _E_, and that our cluster contains 6 nodes.
+Moreover, let us consider that we want to use HyperCube and hash on attributes _A_ and _E_ (we support hashing attributes regardless their position in the f-tree), and that our cluster contains 6 nodes.
 
 There are four possible HyperCube configurations in order to use all nodes, all shown below. Notation _K x M_ means that we assign a dimension of size _K_ to attribute A and a dimension of size _M_ to attribute E.
 
@@ -64,18 +63,18 @@ Let us provide the actual arguments used by _Bit Serializer HyperCube_ for the a
 
 2. a bitset of size six with the bits _set_ for attributes A and E
     ```
-    [ 1 0 0 0 1 0 ]
+    [ 1 0 0 0 1 ]
     ```
 
 3. for each node we call the serialize method of the serializer passing in the multi-dimensional node ID expanded to have size of N. 
 For example, when we want to serialize for node 6 the following vector ID is used:
     ```
-    [ 1 0 0 0 2 0 ]
+    [ 1 0 0 0 2 ]
     ```
     
     and when we want to serialize for node 2 the following vector ID is used:
     ```
-    [ 0 0 0 0 1 0 ]
+    [ 0 0 0 0 1 ]
     ```
 
 As you can see each node's expanded ID is a vector of size N (number of attributes). Each position _T_ in this vector either has zero if attribute with ID T is _NOT_ among the hashed attributes or has the node's ID in dimension T as specified in the node's multi-dimensional ID.
