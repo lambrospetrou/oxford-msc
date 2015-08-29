@@ -93,7 +93,7 @@ The structure **hc_params** is a structure passed as argument in the serialize f
 
 #### Algorithms
 
-In this section we present the algorithms behind bit serialization using HyperCube _filtering_.
+In this section we present the algorithms behind bit serialization using HyperCube.
 
 Recall, that HyperCube shuffling hashes the value in each _hashed attribute_ and based on these hashed values sends the whole tuple to the nodes that have their multi-dimensional IDs matching the hashed values, attribute-wise (the hashed value of a column has to match the node's dimension ID on that column).
 
