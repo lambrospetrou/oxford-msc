@@ -89,7 +89,7 @@ Additionally, these hash functions accept a _seed index_ as argument which affec
 
 **HC_Params**
 
-The structure **hc_params** is the structured passed in the serialize function of _Bit Serializer HyperCube_ and contains the three arguments described in the previous **Section XX** and allows the serializer to use the right hash function for each attribute value during validity check.
+The structure **hc_params** is a structure passed as argument in the serialize function of _Bit Serializer HyperCube_ and contains the three arguments described in the previous **Section XX** to allow the serializer to use the right hash function for each attribute value during validity check.
 
 #### Algorithms
 
