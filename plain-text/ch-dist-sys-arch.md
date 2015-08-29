@@ -4,7 +4,9 @@ In this section, we present the architecture of **D-FDB** and how its individual
 
 An abstract overview of the whole distributed architecture is illustrated in **Figure X.1**.
 
-**// IMAGE DAME**
+![alt text][dfdb-arch]
+[dfdb-arch]: dfdb-arch.png "D-FDB architecture in a glance"
+**Figure X.1 - D-FDB using a cluster of 8 nodes in 2 x 2 x 2 HyperCube configuration.**
 
 ### Architecture Model
 
@@ -67,7 +69,7 @@ The decoupling of data communication from the execution thread, even reading dat
 
 In all distributed systems there is a certain point of time where each node has to communicate data with other nodes. Many times all nodes have to send data to all other nodes, see **Figure X**. 
 
-// **IMAGE OF A CLUSTER SENDING MESSAGES MAY TO MANY**
+// IMAGE **SENDING MESSAGES**
 
 One problem we spotted while designing the system is the order of the actual data transmission. It is a problem that appears in every distributed system but there is no published work on how this should be done. Even work studying algorithms for better data partitioning and shuffling, like HyperCube, which are very relevant to this problem, do not address this issue in their publications.
 
