@@ -11,7 +11,9 @@ We used two different datasets throughout the development and evaluation of the 
 1. **Housing**
     
     _Housing_ is a synthetic dataset emulating the textbook example for the house price market. 
+    
     It consists of six tables: 
+    
         * _House_ (postcode, size of living room/kitchen area, price, number of bedrooms, bathrooms, garages and parking lots, etc.) 
         * _Shop_ (postcode, opening hours, price range, brand, e.g. Costco, Tesco, Saynsbury's)
         * _Institution_ (postcode, type of educational institution, e.g., university or school, and number of students)
@@ -25,6 +27,7 @@ We used two different datasets throughout the development and evaluation of the 
 2. **US retailer**
     
     The _US retailer_ dataset consists of three relations: 
+        
         * Inventory (storing information about the inventory units for products in a location, at a given date) (84M tuples)
         * Sales (1.5M tuples)
         * Clearance (370K tuples)
