@@ -4,15 +4,15 @@ In this section we will provide a description of the two modes supported for dis
 
 ### Single vs Multi round 
 
-The distributed system presented in this chapter supports two modes of execution, with each mode being different in the number of communication rounds before completely evaluating the query. 
+The distributed query engine presented in this chapter supports two modes of execution, with each mode being different in the number of communication rounds before completely evaluating the query. 
 
 #### Single round 
 
-Single round execution refers to multi-way JOIN operations when a query requires joinining more than one attribute. Single round execution is based on the use of the HyperCube algorithm which partitions and shuffles the data based on all the attributes to joined at once.
+Single round execution refers to multi-way JOIN operations when a query requires joining more than one attribute. Single round execution is based on the use of the HyperCube algorithm which partitions and shuffles data considering all the attributes to be joined at the same time.
 
-A lot of researchers investigated the costs incurred in a distributed system and it is widely and publicly acceptable that a major bottleneck in distributed execution is the communication among worker nodes. Therefore, people try to devise algorithms that try to eliminate this cost as much as possible, hence HyperCube and its variations.
+A lot of work has been done by researchers investigating the costs in a distributed system and it is widely acceptable that a major bottleneck in distributed execution is the communication among worker nodes. Therefore, people try to devise algorithms that try to eliminate this cost as much as possible, hence HyperCube and its variations, whose aim is to reduce communication rounds to a minimum.
 
-To summarize, single round execution means that each worker will send data to other workers only once, hence the single communication round, followed by evaluation of the multiple attribute JOIN.
+To summarize, single round execution means that each worker will send data to other workers only once, hence the single communication round, followed by the complete evaluation of the multi-attribute JOIN producing the final result.
 
 #### Multi round
 
@@ -20,6 +20,7 @@ Multi round execution refers to the evaluation of complex queries by processing 
 
 With multi round execution one can investigate more complex topics like query decompositions into smaller queries that are easier to evaluate in separate rounds, that at the same time do not necessarily need to be single attribute JOIN operations.
 
+However, D-FDB at the moment only supports concunctive queries (JOIN operations) and a multi-round execution evaluates one join at a time.
 
 ### Query execution phase
 
