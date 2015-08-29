@@ -37,17 +37,17 @@ We used two different datasets throughout the development and evaluation of the 
 
 The reported times for the COST function and the serialization techniques were taken on a server with the following specifications:
     
-    - Intel Core i7-4770, 3.40 GHz, 8MB cache
-    - 32GB main memory
-    - Linux Mint 17 Qiana
-    - Linux kernel 3.13
+- Intel Core i7-4770, 3.40 GHz, 8MB cache
+- 32GB main memory
+- Linux Mint 17 Qiana
+- Linux kernel 3.13
 
 The experiments related to the distributed query engine  D-FDB were run on a cluster of 10 machines with the following specifications:
     
-    - Intel Xeon E5-2407 v2, 2.40GHZ, 10M cache
-    - 32GB main memory, 1600MHz
-    - Ubuntu 14.04.2 LTS
-    - Linux kernel 3.16
+- Intel Xeon E5-2407 v2, 2.40GHZ, 10M cache
+- 32GB main memory, 1600MHz
+- Ubuntu 14.04.2 LTS
+- Linux kernel 3.16
 
 
 
