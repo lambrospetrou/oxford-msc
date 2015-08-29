@@ -27,6 +27,6 @@ The contributions of this chapter are as follows:
 
 // see the ch-dist-sys-arch.md
 
-# Query processing
+## Query processing
 
 // see the ch-dist-sys-exec.md
