@@ -2,9 +2,14 @@
 
 In this section, we introduce the HyperCube algorithm [**REFERENCE**] that previous work has shown to be great solution for data shuffling in distributed query processing. In addition, we present an algorithm that explains how HyperCube works on factorizations and finally, how we integrated it with the _Bit Serializer_, see **Section X**, resulting in a new serializer coined _Bit Serializer HyperCube_.
 
-### HyperCube introduction
+### HyperCube preliminaries
 
-**BLAH BLAH**
+In this section, we present the theoretical background behind HyperCube algorithm which is used in our _Bit Serializer HYperCube_.
+
+A lot of the novel data management systems, especially analytics engines, operating on large-scale data nowadays are equipped with large amounts of main memory which is used during the evaluation of complex analytics queries [**Spark, F1**]. Traditional systems based on secondary storage required many disk I/O operations to load and save intermediate results, thus their main bottleneck is disk I/O, whereas for an in-memory dabatase system that bottleneck has been replaced by the communication cost incurred during query evaluation since large amounts of data needs to be reshuffled among the workers.
+
+
+
 
 ### Bit Serializer HyperCube
 
