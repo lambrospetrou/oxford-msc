@@ -24,11 +24,39 @@ We need to find _ND_ factors that their product equals _P_ (how to find these fa
 
 Let us use _ND_ = 3 and all factors equal to two (p1 = p2 = p3 = 2), hence we say that we have three dimensions and each dimensions size of two.
 
-Our cluster of nodes is modelled into a virtual hypercube which has _ND_ dimensions and in each dimension it has the respective _pi_ size. Each node represents a point in this hypercube and is identified by a vector of _ND_ values, one in each dimension. In our example, our cluster is formed as the hypercube illustrated in **Figure X.R**, also showing the node IDs based on their position in the hypercube. 
+Our cluster of nodes is modelled into a virtual hypercube which has _ND_ dimensions and in each dimension it has the respective _pi_ size. Each node represents a point in this hypercube and is identified by a vector of _ND_ values, one in each dimension. In our example, our cluster is formed as the hypercube illustrated in **Figure X.R**.
 
 ![alt text][hc-cluster]
 [hc-cluster]: hc-cluster.png "Cluster of 8 nodes in HyperCube formation."
 **Figure X.x - cluster of 8 nodes in HyperCube formation**
+
+We can see that there are two nodes in each dimension. Below I provide a possible assignment of the identifying vector for each node (multi-dimensional IDs).
+```
+Node X: [Position in p1, Position in p2, Position in p3]
+Node 1: [ 0 0 0 ]
+Node 2: [ 0 0 1 ]
+Node 3: [ 0 1 1 ]
+Node 4: [ 0 1 0 ]
+Node 5: [ 1 0 1 ]
+Node 6: [ 1 1 1 ]
+Node 7: [ 1 1 0 ]
+Node 8: [ 1 0 0 ]
+```
+
+Additionally, each dimension represents an attribute in the JOIN query. For example in our query, dimension _p1_ represents attribute A, dimension _p2_ represents attribute B and dimension _p3_ represents attribute C. HyperCube, also uses a hash function for each join/hashed attribute, chosen independently from the others, which has a co-domain of the dimension size that represents that attribute.
+
+Furthermore, we assume that all four relations are partitioned uniformly and distributed among the nodes. Each server during the **single** communication round will load the local partition _Zi_ of each relation _Z_ and for each tuple _T_ decides which nodes should receive that tuple as follows:
+
+0. Create a multi-dimensional vector ID similar to those assigned to each node, let's call it _CTV_, initialized with *
+    [ * * * ]
+1. For every attribute _t_ in relation Z that is among the JOIN-attributes of the query, it hashes the value _T[t]_ and assigns the hashed value to the vector _CTV_
+2. if _CTV_ contains no _*_ then it can be used as the multi-dimensional ID for the node that should receive the tuple. If _CTV_ contains _*_ it means that the current relation Z does not contain all the hashed/join attributes and that the tuple _T_ should be sent to more tha one nodes. To identify the required nodes we use _CTV_, with every _*_ acting as a wildcard for _ALL_ values in that dimension, meaning that if _CVT = [ 0 1 * ]_ the tuple should be sent to the nodes with IDs [ 0 1 0 ] and [ 0 1 1 ].
+
+To make this clear, we can see from our example that all tuples from relation R will be sent to two nodes since only dimensions _p1_ and _p2_ can be defined its tuples, which is the same as all relations since all of them only contain two out of the three hashed attributes.
+
+HyperCube's advantage over other shuffle techniques (i.e. hashing an attribute to all nodes) is that it is more resiliant to data load imbalance (a.k.a skew) since it is more difficult to send the same value for a column to the same node since it depends on the other hashed columns too.
+
+The methodology to identify the proper values for _ND_ number of factors/dimensions and the size of each dimension are not part of this project, thus not presented here. In experiments, we used the query configuration files to specify the HyperCube dimensions required for the query we wanted to evaluate.
 
 ### Bit Serializer HyperCube
 
