@@ -1,6 +1,6 @@
 ## HyperCube on Factorizations
 
-In this section, we introduce the HyperCube algorithm [**REFERENCE**] that previous work has shown to be great solution for data shuffling in distributed query processing. In addition, we present an algorithm that explains how HyperCube works on factorizations and finally, how we integrated it with the _Bit Serializer_, see **Section X**, resulting in a new serializer dedicated in HyperCube coined _Bit Serializer HyperCube_.
+In this section, we introduce the HyperCube algorithm [**REFERENCE**] that previous work has shown to be great solution for data shuffling in distributed query processing. In addition, we present an algorithm that explains how HyperCube works on factorizations and finally, how we integrated it with the _Bit Serializer_, see **Section X**, resulting in a new serializer coined _Bit Serializer HyperCube_.
 
 ### HyperCube introduction
 
