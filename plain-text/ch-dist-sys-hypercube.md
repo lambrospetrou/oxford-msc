@@ -12,11 +12,12 @@ _Bit Serializer HyperCube_'s main purpose is to be used during the communication
 
 #### Arguments
 
+Before explaining the arguments of the algorithm we explain some important topics used thourghout this chapter, using an example f-tree, see **Figure X.1**.
+
 ![alt text][cost_ftree]
 [cost_ftree]: cost-tree.png "Simple Factorization Tree"
 **Figure X.1 - a simple factorization tree.**
 
-For example, let's examine the f-tree in **Figure X.1**. 
 
 This f-tree has six attributes, and each attribute internally gets an ID ranging from zero to (N-1), where N in this case equals six. Assume that the IDs for these attributes are as below:
 
