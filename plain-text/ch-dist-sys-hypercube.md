@@ -229,7 +229,7 @@ Each union just takes the next available mask state from the states vector, star
 
 The complexity of serializing a factorization using _Bit Serializer HyperCube_ and _Bit Serializer_ is asymptotically the same. They both incorporate two passes over the whole factorization.
 
-The HyperCube version, however, has the additional overhead of hashing the values in unions of hashed attributes which is constant overhead but stills adds up to the total processing time. Furthermore, this version might skip certain subtrees when values are invalid which can speed up the second phase significantly. Both points affect runtime of the HyperCube serialization but it strictly depends on each factorization's values and the number of hashed attributes whether it has better or worse performance.
+The HyperCube version, however, has the additional overhead of hashing the values in unions of hashed attributes. Although it has constant overhead it still adds up to the total processing time. Furthermore, this version might skip certain subtrees when values are invalid which can speed up the second phase significantly. Both points affect runtime of the HyperCube serialization but its performance strictly depends on the values of each factorization and on the number of hashed attributes.
 
 
 #### Deserialization
