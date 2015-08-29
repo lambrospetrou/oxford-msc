@@ -14,7 +14,7 @@ _Bit Serializer HyperCube_'s main purpose is to be used during the communication
 
 Before explaining the arguments of the algorithm we explain some important topics used thourghout this chapter, using an example f-tree, see **Figure X.1**.
 
-![alt text][cost-ftree-example]
+![alt text][hc-ftree-example]
 [hc-ftree-example]: hc-ftree-example.png "Example f-tree"
 **Figure X.1 - a simple factorization tree.**
 
