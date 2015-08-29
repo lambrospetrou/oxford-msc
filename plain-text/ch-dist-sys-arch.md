@@ -1,4 +1,4 @@
-## System Architecture
+## D-FDB Architecture
 
 In this section, we present the architecture of **D-FDB** and how its individual components communicate and coordinate during the execution of a query.
 
