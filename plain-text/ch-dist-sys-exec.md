@@ -40,6 +40,14 @@ Each worker has three threads running, as previously described, main execution t
 
 The multi round execution is similar, and pretty much wraps steps 1 to 4 into a loop, one iteration for each round, where the input for the first round is loaded from local storage and in consecutive rounds we use the result of the previous round as input to the next round.
 
+#### Merge Factorizations
+
+In this section we provide the **merge_same** operator that given a list of factorizations of the same f-tree merges them together into a single factorization.
+
+// **TODO** if there is time!!!!
+
+Mention the **merge_under_groot** ...
+
 ### Configuration files
 
 In this section we briefly present the two main configuration files used that specify the network topology and the query to be evaluated.
