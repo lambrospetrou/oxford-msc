@@ -1,6 +1,6 @@
 ## System Architecture
 
-In this section, we will present the architecture of the distributed system implemented and how its individual components communicate and coordinate during the execution of a query.
+In this section, we present the architecture of **D-FDB** and how its individual components communicate and coordinate during the execution of a query.
 
 An abstract overview of the whole distributed architecture is illustrated in **Figure X.1**.
 
