@@ -55,17 +55,19 @@ These two classes, runnables in separate threads, are responsible for all the da
 
 In _Stage 3_, query execution stage, the two _services_ are responsible to send and receive factorizations over the wire using TCP. Specifically, ReaderData in each execution round (one for Single mode, many for Multi mode) waits on each one of the N worker TCP streams in order to receive this round's factorization from each other node. It uses the _Bit Deserializer_ to deserialize data received into in-memory dactorizations, skipping all empty factorizations. On the other side, WriterData is responsible to take the input factorizations (or the previous round's result) and serialize it to all worker nodes using the _Bit Serializer HyperCube_ which incorporates the HyperCube algorithm. If no values are valid to be sent to a node, the empty factorization is sent.
 
-There exist, couple of design rules during data communication as enumerated below.
+There exist, couple of design rules applied for data communication as enumerated below.
 
-1. Each worker will send a single factorization to each other worker during each data communication phase of the query exeuction stage. In case no valid values exist then a factorization with zero values is sent (only the f-tree basically). 
-2. All factorizations sent in the same communication round should have the same f-tree, because they are merged into a global one which is then being applied an f-plan (query operations).
+1. Each worker will send a single factorization to each other worker during each communication round of the query execution stage. In case no valid values exist then the empty factorization is sent (the f-tree and a zero-sized factrorization). 
+2. All factorizations sent in the same communication round should have the same f-tree, because they are merged into a global one which is then used for the f-plan evaluation (query operations).
 3. The factorizations are serialized into the TCP streams using _Bit Serializer HyperCube_ and deserialized on the other side using _Bit Deserializer_.
 
-The decoupling of data communication from the execution thread, even reading data from writing data, turned out to be very useful because it made the implementation more modularized and more extensible to make improvements on any side without affecting the other. Most importantly, since reading and writing are decoupled and they run in parallel we achieve concurrency during communication phase since a worker can send data to one node and receive from another at the same time.
+The decoupling of data communication from the execution thread, even reading data from writing data, turned out to be very useful because it made the implementation more modularized and more extensible, thus givingus the opportunity to make improvements on any side without affecting the other. Most importantly, since reading and writing are decoupled and they run in parallel, we achieve concurrency in communication phase since a worker can send data to one node and receive from another at the same time.
 
 #### Ordered communication vs others
 
 In all distributed systems there is a certain point of time where each node has to communicate data with other nodes. Many times all nodes have to send data to all other nodes. 
+
+// **IMAGE OF A CLUSTER SENDING MESSAGES MAY TO MANY**
 
 One problem we spotted while designing the system is the order of the actual data transmission. It is a problem that appears in every distributed system but there is no published work on how this should be done. Even work that studies algorithms for better data partitioning and shuffling, like HyperCube, which are very relevant to this problem do not address this issue.
 
