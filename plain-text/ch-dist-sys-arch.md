@@ -36,14 +36,14 @@ The distributed execution of a query has the four stages explained below.
 
 3. **Query execution**
     This is the most important stage of the whole distributed query processing.
-    In this stage each worker will parse the query configuration, load the local inputs in memory and depending on the distribution mode (Single round vs Multi round) it will execute the query. When the query has been processed, the _QueryExecutionFinished_ message is sent to the master.
-    The master waits for N _QueryExecutionFinished_ messages and once received sends the initiation message for the final stage.
+    In this stage each worker will parse the query configuration, load the local inputs in memory and will evaluate the query based on the distribution mode requested (Single round vs Multi round). When the query has been fully evaluated, the _QueryExecutionFinished_ message is sent to the master.
+    The master waits for N _QueryExecutionFinished_ messages and once received broadcasts the initiation message for the final stage.
 
 4. **Results gathering**
-    This is the stage where any communication of information regarding the partial results on each worker should be made. For example, each worker can send a path to the master node where the partial query result is located.
-    Moreover, this stage is the final stage of the distributed query processing so the workers can do any cleanup and terminate gracefully.
+    This is the stage where any communication of information regarding the partial results on each worker is made. For example, each worker can send a path to the master node where the partial query result is located.
+    Moreover, this stage is the final stage of the distributed query processing so the workers can do any cleanup on resources allocated and terminate gracefully.
 
-The whole query processing is done in stage 3, including data partitioning, shuffling and f-plan execution on local factorizations. The rest stages were required for bootstrapping purposes of the system and in a real-world scenario where a cluster of nodes is already up and running they would not even exist. Therefore, it is nice to have the query processing isolated in order to be able to reason correctly about each processing phase and also about the end-to-end experience of the system which can easily be measured on the master node.
+The whole query processing is done in stage 3, including data partitioning, shuffling and f-plan execution on local factorizations. The rest stages were required for bootstrapping the system and in a real-world scenario where a cluster of nodes is already up and running they would not even exist. Therefore, it is nice to have the query processing isolated in order to be able to reason correctly about each processing phase and also about the end-to-end experience of the system which can easily be measured on the master node.
 
 ### Communication in the cluster
 
