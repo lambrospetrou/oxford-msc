@@ -67,9 +67,11 @@ The decoupling of data communication from the execution thread, even reading dat
 
 #### Ordered communication vs others
 
-In all distributed systems there is a certain point of time where each node has to communicate data with other nodes. Many times all nodes have to send data to all other nodes, see **Figure X**. 
+In all distributed systems there is a certain point of time where each node has to communicate data with other nodes. Many times all nodes have to send data to many other nodes, see **Figure X** for example of a scenario that all nodes need to communicate data. 
 
-// IMAGE **SENDING MESSAGES**
+![alt text][cluster-comm]
+[cluster-comm]: dfdb-arch.png "Nodes in a cluster sending and receiving data."
+**Figure X.2 - Worker nodes communication inside a cluster**
 
 One problem we spotted while designing the system is the order of the actual data transmission. It is a problem that appears in every distributed system but there is no published work on how this should be done. Even work studying algorithms for better data partitioning and shuffling, like HyperCube, which are very relevant to this problem, do not address this issue in their publications.
 
