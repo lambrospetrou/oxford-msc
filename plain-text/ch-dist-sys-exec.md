@@ -84,11 +84,11 @@ xxx.1.xxx.36:11100
 2 1 0
 ```
 
-The configuration above is a sample settings configuration that contains all the required information about the network topology of our system. It starts by mentioning the number of worker nodes in the cluster, followed by their IPs. Recall that you can use different ports on the same machine to simulate different nodes. In the next line (which is not comment) we specify the master node. The master node is **required** to have a different port than _ALL_ the worker nodes but is not required to have different IP, thus being on different machine.
+The excerpt above is part of a sample settings configuration file that contains all the required information about the network topology of our cluster of nodes. It starts by mentioning the number of worker nodes in the cluster, followed by their IPs. Recall that you can use different ports on the same machine to simulate different nodes. In the next line (next line not comment) we specify the master node. The master node is **required** to have a different port than _ALL_ the worker nodes but is not required to have different IP, thus being on different machine.
 
-A path to the query configuration to be evaluated is provided in the next line and finally we have the communication ordering as explained in the previous section. Briefly, for the writing ordering we have one line for each node that defines the order in which the node should read data from, and for the reading ordering there is a line for each node that defines the order in which the reads should be made.
+A path to the query configuration to be evaluated is provided in the next line and finally we have the communication ordering as explained in **Section P**. Briefly, for the writing ordering we have one line for each node that defines the order in which the node should read data from, and for the reading ordering there is a line for each node that defines the order in which the reads should be made.
 
-In this example the ordering can be determined dynamically in runtime since it follows a pattern but we decided to keep it in the settings in case we want different ordering without requiring source code changes.
+In this simple example the ordering could be determined dynamically in runtime since it follows a pattern, but we decided to keep it in the settings file in case we want to try different orderings in the experimental evaluation, thus avoiding source code changes.
 
 
 #### Query configuration
