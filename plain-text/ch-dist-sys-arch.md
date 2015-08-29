@@ -75,9 +75,9 @@ We had numerous ideas and thoughts but we concluded in two designs and finally i
 
 **Idea 1 - Ordered communication**
 
-In this approach the threads ReaderData and WriterData  will read and write respectively data to other workers following a specific order with goal to achieve good throughput. ReaderData fully reads a message from one node before proceeding to the next one, while WriterData fully writes data to one node before writing to the next one.
+In this approach the threads ReaderData and WriterData will read and write data to other workers following a specific order with goal to achieve good throughput. ReaderData fully reads a message from one node before proceeding to the next one, while WriterData fully writes data to one node before writing to the next one.
 
-The specific ordering in reads and writes aims to maximize possibility for high thoughput and maximum overlap between reads and writes in the cluster. We want to avoid having a node waiting to receive data from one node at the same time while another node is blocked waiting to send data to a busy node.
+The specific ordering in reads and writes aims to maximize possibility for high thoughput and maximum overlap between reads and writes in the cluster. We want to avoid having a node waiting to receive data from one node, while another node is blocked waiting to send data to a third busy node.
 
 For example, let us see the following communication ordering in a cluster of 5 worker nodes.
 
@@ -103,7 +103,7 @@ The first block defines the order of writes for each node. Node 1 for instance, 
 
 The important thing in this ordered communication, is that if we distinguish 4 communication rounds (vertical division) we can see that no node is ever stalled or blocked without reading or writing. Additionally, there is a pairing between the reads and the writes, which means that for any given node A, the writes _targetting_ A will be done in the same order as A will do the corresponding reads.
 
-In our tests, the idea works as expected but still there were some cases when a node had to write more data than other nodes some nodes were waiting for it to finish.
+In our tests, the idea works as expected but still there were some cases when a node had to write more data than the rest, thus causing some nodes to wait for it to finish.
 
 **Idea 2 - Round robin communication**
 
