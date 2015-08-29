@@ -47,8 +47,7 @@ Additionally, each dimension represents an attribute in the JOIN query. For exam
 
 Furthermore, we assume that all four relations are partitioned uniformly and distributed among the nodes. Each server during the **single** communication round will load the local partition _Zi_ of each relation _Z_ and for each tuple _T_ decides which nodes should receive that tuple as follows:
 
-0. Create a multi-dimensional vector ID similar to those assigned to each node, let's call it _CTV_, initialized with *
-    [ * * * ]
+0. Create a multi-dimensional vector ID similar to those assigned to each node, let's call it _CTV_, initialized with '\*', hence [ * * * ]
 1. For every attribute _t_ in relation Z that is among the JOIN-attributes of the query, it hashes the value _T[t]_ and assigns the hashed value to the vector _CTV_
 2. if _CTV_ contains no _*_ then it can be used as the multi-dimensional ID for the node that should receive the tuple. If _CTV_ contains _*_ it means that the current relation Z does not contain all the hashed/join attributes and that the tuple _T_ should be sent to more tha one nodes. To identify the required nodes we use _CTV_, with every _*_ acting as a wildcard for _ALL_ values in that dimension, meaning that if _CVT = [ 0 1 * ]_ the tuple should be sent to the nodes with IDs [ 0 1 0 ] and [ 0 1 1 ].
 
