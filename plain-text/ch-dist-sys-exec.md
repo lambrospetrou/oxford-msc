@@ -161,7 +161,7 @@ In this section we present an example query configuration file.
 
 We start by defining the path to the input factorization that will be loaded by each worker from its local srorage. A feature that we found useful to have is that if the path specified does not exist or fails to open, then each worker will try to load the path suffixed by its numeric ID. 
 
-For example if the worker on node 2 tried to open the path on the above configuration file and failed, it will try to open the following path this time (note the _-2_ suffix):
+For example if the worker on node 2 tried to open the path on the above configuration file and failed, it would then try to open the following path this time (note the _-2_ suffix):
 ```
 /home/lambros/dist-datasets/somedataset/nodes_4/input-groot-2.dat
 ```
@@ -172,12 +172,12 @@ The following group of options specifies an f-plan to be applied on the input ri
 
 In addition, we continue to the f-plans of the main query. The next line denotes the number of f-plans we want to evaluate. When this value is 1 we simulate Single round execution whereas when this value is more than 1 we simulate Multi round execution with each of the following f-plans be applied at the corresponding round.
 
-The rest of the configuration is related to the HyperCube configuration. We start by enumerating all the attributes that exist in the factorizations we work with (they don't have to in any specific order and their order does not relate to the IDs they have inside their respective factorization f-trees).
+The rest of the configuration is related to the HyperCube configuration. We start by enumerating all the attributes that exist in the factorizations (they don't have to be in any specific order and their order does not relate to the IDs given to them inside their respective factorization f-trees).
 
-Right below the attribute names, we specify the attributes to be hashed. Each hashed attribute is specified by using its position in the line before where all the attributes are enumerated. In the example above the hashed attributes are _ksnid_ and _locn_, hence the IDs 2 and 1. Moreover, the implementation of the Multi round execution uses one hashed attribute at each round, but can easily be extended to support arbitrary f-plan by adding more options to the configuration file.
+Right below the attribute names, we specify the attributes to be hashed. Each hashed attribute is specified by using its position in the line before where all the attributes are enumerated. In the example above the hashed attributes are _ksnid_ and _locn_, hence the IDs 2 and 1(indexing starts from 0). Moreover, the implementation of the Multi round execution uses one hashed attribute at each round, but can easily be extended to support arbitrary f-plan by adding more options to the configuration file.
 
-Below the hashed attributes, we specify the dimension size for each of them. Each node will automatically get a multi-dimensional ID based on these dimensions.
+Below the hashed attributes, we specify the dimension size for each one of them in the hypercube (in the above example both attributes got a dimension size of two, thus requiring four nodes). Each node will automatically get a multi-dimensional ID based on these dimensions.
 
-The last lines make it easy for us to group different attribute names that refer to the same attribute together. We wanted this functionality since in HyperCube we want to use the same hash function for a specific hashed attribute, therefore we had to somehow group all the atribute names referring to _ksnid_ together and assign them a single hash function (seed index).
+The last part of the configuration makes it easy for us to group different attribute names that refer to the same attribute. We wanted this functionality since in HyperCube we want to use the same hash function for a specific hashed attribute, therefore we had to somehow group all the atribute names referring to _ksnid_ together and assign them a single hash function (seed index). Additionally, current FDB implementation has the limitation that in an f-tree we cannot have an attribute name more than once so many times we had to rename some attributes and this configuration help us overcome this easily.
 
 This concludes our configuration files regarding query execution.
