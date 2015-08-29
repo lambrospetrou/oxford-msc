@@ -50,6 +50,34 @@ The experiments related to the distributed query engine  D-FDB were run on a clu
 - Linux kernel 3.16
 
 
+### COST function - finding good f-trees
 
+
+
+### Serialization of Data factorizations
+
+In this section, we evaluate each serialization technique examined and described in **Chapter SR**.
+
+#### Correctness of serialization
+
+The correctness test of each serialization was done both in-memory and off-memory using the disk. For equality comparison between two factorizations we use a special function (_toSingletons()_) that traverses the factorization encoding the singletons into a string representation that contains attribute name, value and attribute ID in text format, thus creating a huge string that contains the whole data of the factorization.
+
+**In memory tests**
+
+For the in-memory tests we performed the following steps:
+
+1. Load a factorization from disk, let's call it _OriginRep_
+2. Serialize it in memory into a memory buffer (array of bytes)
+3. Deserialize the buffer into a new instance of a factorization, let's call it _SerialRep_
+4. Check the fields of _SerialRep_ that valid values are used
+5. Use the _toSingletons()_ method and create the string representation for _OriginRep_ and _SerialRep_ and compare the two strings for equality. This ensures that not only we recover the same number of singletons properly but also that the IDs and values of those singletons are preserved during serialization and desrialization, even with floating point values.
+
+For the off-memory tests we performed similar steps as in-memory with an extra additional test to further prove correction.
+1. Load a factorization from disk, let's call it _OriginRep_
+2. Serialize it to a file on disk (binary file mode)
+3. Open the file in read mode and deserialize it into a new instance of a factorization, let's call it _SerialRep_
+4. Check the fields of _SerialRep_ that valid values are used
+5. Use the _toSingletons()_ method and create the string representation for _OriginRep_ and _SerialRep_ and compare the two strings for equality. This ensures that not only we recover the same number of singletons properly but also that the IDs and values of those singletons are preserved during serialization and desrialization, even with floating point values.
+6. Enumerate the tuples encoded by the factorizations _OriginRep_ and _SerialRep_ into two files. Compare the two files for equality using the standard command line tool _diff_.
 
 
