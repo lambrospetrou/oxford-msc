@@ -45,7 +45,7 @@ Node 8: [ 1 0 0 ]
 
 Additionally, each dimension represents an attribute in the JOIN query. For example in our query, dimension _p1_ represents attribute A, dimension _p2_ represents attribute B and dimension _p3_ represents attribute C. HyperCube, also uses a hash function for each join/hashed attribute, chosen independently from the others, which has a co-domain of the dimension size that represents that attribute.
 
-Furthermore, we assume that all four relations are partitioned uniformly and distributed among the nodes. Each server during the **single** communication round will load the local partition _Zi_ of each relation _Z_ and for each tuple _T_ decides which nodes should receive that tuple as follows:
+Furthermore, we assume that all four relations are partitioned uniformly and distributed among the nodes. Each server during the **single** communication round will load the local partition _Zi_ of each relation _Z_ and for each tuple _T_ decides which nodes should receive it as follows:
 
 0. Create a multi-dimensional vector ID similar to those assigned to each node, let's call it _CTV_, initialized with '\*', hence [ * * * ]
 1. For every attribute _t_ in relation Z that is among the JOIN-attributes of the query, it hashes the value _T[t]_ and assigns the hashed value to the vector _CTV_
