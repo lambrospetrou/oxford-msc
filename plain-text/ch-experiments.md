@@ -85,8 +85,6 @@ For the off-memory tests we performed similar steps as in-memory with an extra a
 
 In this section we will examine the size of the serialization output
 
-#### Serialization and Deserialization times
-
 **PLOT 1 - Comparison of serialization techniques vs flat**
 
 all three serialization result sizes (raw) vs flat (raw bytes)
@@ -98,6 +96,9 @@ all three serializations result size in raw bytes, gzipped max, bziped max
 **PLOT 1 - Comparison of bit serialization vs FLAT**
 
 the bit serializer (none, bzip min max, gzip min max) vs flat (gzip min max, bzip min max, raw)
+
+#### Serialization and Deserialization times
+
 
 #### Conclusions
 
