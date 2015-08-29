@@ -12,12 +12,6 @@ _Bit Serializer HyperCube_'s main purpose is to be used during the communication
 
 #### Arguments
 
-_Bit Serializer HyperCube_ was designed to accept the following arguments:
-
-1. the factorization to be serialized
-2. a bitset or vector (array) with size the number of attributes in the factorization (1) which has its bits _set_ for each attribute ID that is to be hashed 
-3. a vector (array) with size the number of attributes in the factorization (1) which in each position has the node's ID for that dimension
-
 ![alt text][cost_ftree]
 [cost_ftree]: cost-tree.png "Simple Factorization Tree"
 **Figure X.1 - a simple factorization tree.**
@@ -57,7 +51,13 @@ Node 5: [1, 1]
 Node 6: [1, 2]
 ```
 
-Now that all the information is explained let us see the actual arguments used by _Bit Serializer HyperCube_ for this specific example.
+_Bit Serializer HyperCube_ was designed to accept the following arguments:
+
+1. the factorization to be serialized
+2. a bitset or vector (array) with size the number of attributes in the f-tree, where each _set_ bit corresponds to an attribute that is to be hashed 
+3. a vector (array) with size the number of attributes in the f-tree. Each value in this array corresponds to the node's dimension ID for that attribute taken form its multi-dimensional ID
+
+Let us provide the actual arguments used by _Bit Serializer HyperCube_ for the above example.
 
 1. factorization to be serialized
 
