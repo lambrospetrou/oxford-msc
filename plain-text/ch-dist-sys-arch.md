@@ -107,11 +107,11 @@ In our tests, the idea works as expected but still there were some cases when a 
 
 **Idea 2 - Round robin communication**
 
-A second approach to the communication problem was incorporated round-robin communication. The intuition to this idea is that instead of fully communicating with one node before moving on to the next one (either when writing or reading), we could write less to all the nodes and iterate more times.
+A second approach to the communication problem utilizes round-robin communication. The intuition is that instead of fully communicating with one node before moving on to the next one (either when writing or reading), we could write less to all nodes and iterate more times.
 
-For example if node A has to send 1000 MB to all other nodes, instead of sending the whole 1000MB one node at a time, it sends the first 100MB to all of them, then the next 100MB to all of them, and so long. This approach aims to keep all nodes busy at all times and possibly avoid having nodes blocked at a node that is doing a long read/write.
+For example if node A has to send data of 1000 MB to all other nodes, instead of sending the whole 1000MB at one node at a time, it sends the first 100MB to all of them, then the next 100MB to all of them, and so long. This approach aims to keep all nodes busy at all times and possibly avoids having nodes blocked at a node that is doing a long read/write. For each partial data communication we can either use ordering like above or random pairing.
 
-The disadvantage though of this approach to the previous ordered one is that we need to keep track of the required information while sending (or receiving) for all nodes. For example, when serializing a factorization we use some statistics and a vector that holds a state for each union node. In this approach we have to calculate and have in-memory this information for all nodes.
+The disadvantage of this approach compared to the ordered one is that we need to keep track of the required information while sending (or receiving) for all nodes. For example, when serializing a factorization (_Bit Serializer HyperCube_) we use some statistics and a vector that holds a state for each union node. In this approach we have to calculate and have in-memory this information regarding all nodes.
 
 Unfortunately, due to limited time we did not compare the two solutions and only implemented the first one.
 
