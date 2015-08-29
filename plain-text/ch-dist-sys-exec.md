@@ -28,15 +28,17 @@ In this section we will describe how the above two modes are implemented in the 
 
 Query processing and result evaluation corresponds to _Stage 3_ as described in the _System protocol_. Details about the query and the cluster topology are specified in configuration files (will be described in the next section).
 
-We will present the steps to process a single round evaluation first which is then going to be used for Multi round.
+First, we present the steps taken to process a single round evaluation and then explain how D-FDB builds on-top of that to provide multi round execution.
 
-1. we start by loading the input factorization in memory (using the configuration files to locate them)
-2. we signal ReaderData to start accepting factorizations from other workers and give the inputs to WriterData to start writing data to other workers
-3. once all factorizations from other workers have been received, we drop the empty ones and use the special *merge\_same* operator to merge the partial factorizations received into a single factorization (recall that all factorizations sent in the same round use the same f-tree)
-4. we now are at the last step of the processing where we read from the query configuration file the f-plan operations and using the *f-plan executor* we evaluate the query on the local factorization
-5. notify master node that we finished query execution
+Each worker has three threads running, as previously described, main execution thread, ReaderData for receiving data and WriterData for sending data.
 
-The multi round execution is similar and pretty much wraps steps 1 to 4 into a loop for each round where the input initially is loaded from local storage and in consecutive rounds we use the result of the previous round as input to the next round.
+1. execution thread starts loading the input factorization in memory (using the configuration files to locate them)
+2. it then signals ReaderData to start accepting factorizations from other workers and passes the input factorization to WriterData in order to begin writing data to other workers
+3. once all factorizations from other workers have been received, the empty ones are dropped and the valid ones are passed over to the main execution thread. Then the special *merge\_same* operator is used to merge the partial factorizations received into a single factorization (recall that all factorizations sent in the same round use the same f-tree)
+4. the last step of the processing uses the *f-plan executor* in order to evaluate the query specified in the query configuration file on the local factorization and produce the factorization result
+5. finally, each worker notifies master node that the query has been completely evaluated
+
+The multi round execution is similar, and pretty much wraps steps 1 to 4 into a loop, one iteration for each round, where the input for the first round is loaded from local storage and in consecutive rounds we use the result of the previous round as input to the next round.
 
 ### Configuration files
 
