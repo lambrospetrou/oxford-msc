@@ -1,6 +1,6 @@
 # Distributed query processing in FDB
 
-In this section, we will present the distributed system designed and implemented to support distributed query processing on factorizations using the FDB query engine. We describe how the system integrates the HyperCube algorithm for shuffling the data among workers and also describe how the system can be used for Single and Multi round executions, where single or multi refers to the number of communication rounds before the query is completely evaluated.
+In this section, we present the design and implementation of D-FDB, a distributed query engine that uses FDB [**REFERENCE**] for distributed query processing on factorized data. We describe how the system integrates the HyperCube[**Suciu**] algorithm for shuffling the data among workers and also describe how the system can be used for Single and Multi round executions, where single or multi refers to the number of communication rounds before the query is completely evaluated.
 
 ## Motivation
 
