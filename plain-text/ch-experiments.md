@@ -57,6 +57,7 @@ The experiments related to the distributed query engine  D-FDB were run on a clu
 ### Serialization of Data factorizations
 
 In this section, we evaluate each serialization technique examined and described in **Chapter SR**.
+The factorizations we use to evaluate the serialization techniques are the _NATURAL JOINS_ of the two datasets, _Housing_ and _US retailer_on all of their relational tables.
 
 #### Correctness of serialization
 
@@ -79,5 +80,35 @@ For the off-memory tests we performed similar steps as in-memory with an extra a
 4. Check the fields of _SerialRep_ that valid values are used
 5. Use the _toSingletons()_ method and create the string representation for _OriginRep_ and _SerialRep_ and compare the two strings for equality. This ensures that not only we recover the same number of singletons properly but also that the IDs and values of those singletons are preserved during serialization and desrialization, even with floating point values.
 6. Enumerate the tuples encoded by the factorizations _OriginRep_ and _SerialRep_ into two files. Compare the two files for equality using the standard command line tool _diff_.
+
+#### Serialization sizes
+
+In this section we will examine the size of the serialization output
+
+#### Serialization and Deserialization times
+
+**PLOT 1 - Comparison of serialization techniques vs flat**
+
+all three serialization result sizes (raw) vs flat (raw bytes)
+
+**PLOT 2 - Comparison of all serialization techniques (SIMPLE vs BYTE vs BIT)**
+
+all three serializations result size in raw bytes, gzipped max, bziped max
+
+**PLOT 1 - Comparison of bit serialization vs FLAT**
+
+the bit serializer (none, bzip min max, gzip min max) vs flat (gzip min max, bzip min max, raw)
+
+#### Conclusions
+
+The evaluation of these serialization techniques reconfirms the results of previous work that factorizations can have great compression factors over flat data. We showed that our serialization techniques retain these compression in serialization too.
+
+Additionally, the comparison between the raw serialization sizes and the sizes after applying standard compression algorithms show that there still exists possibility to further reduce the serialization size by integrating some compression techniques into the serialization itself, like we did for example with _Bit Serializer_ and got much better results.
+It would be more beneficial to integrate some compression techniques into the serialization since the standard compression algorithms are slower than us by several factors.
+
+
+
+
+
 
 
