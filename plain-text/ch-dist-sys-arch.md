@@ -20,14 +20,14 @@ All configuration options about the topology (master, worker nodes) and the quer
 
 ### System protocol
 
-The system, once given a distributed query processing request, starts the _distributed runner_ in each site (node). This is a special class that determines whether the running process is a master or a worker and initiates distributed execution.
+The system, once given a distributed query processing request, starts the _distributed runner_ in each site (node). This is a special class that determines whether the running process is a master or a worker and initiates the main execution thread.
 
 The distributed execution of a query has the four stages explained below.
 
 1. **Initial Handshake**
     The purpose of this stage is to ensure that all nodes are up and running, ready to process the query.
     Each worker node sends a _hello_ message to the master in order to signal its existence and well being in the cluster. Once the worker sends this message, it blocks until the response from the master comes back. Before sending the _hello_ message though, each worker spawns a separate thread/process and runs the **ReaderData** (see **following Section**).
-    The master node on the other side upon starting, waits to receive N _hello_ messages, where N is the number of worker nodes. As soon as the master receives all handshakes, it sends to all workers a message to initiate the next stage, _Connection Establishment_.
+    The master node on the other side upon starting, waits to receive N _hello_ messages, where N is the number of worker nodes. As soon as the master receives all handshakes, it broadcasts to the workers a message signaling initiation of the next stage, _Connection Establishment_.
 
 2. **Connection establishment**
     In this stage each worker node establishes TCP connection with all other workers, in order to be able to send and receive messages without establishing new connections every single time during the query execution.
