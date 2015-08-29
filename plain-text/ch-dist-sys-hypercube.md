@@ -8,8 +8,27 @@ In this section, we present the theoretical background behind HyperCube algorith
 
 A lot of the novel data management systems, especially analytics engines, operating on large-scale data nowadays are equipped with large amounts of main memory which is used during the evaluation of complex analytics queries [**Spark, F1**]. Traditional systems based on secondary storage required many disk I/O operations to load and save intermediate results, thus their main bottleneck is disk I/O, whereas for an in-memory dabatase system that bottleneck has been replaced by the communication cost incurred during query evaluation since large amounts of data needs to be reshuffled among the workers.
 
+Our focus is on conjunctive queries, which have always been important (mostly with star-joins of a large table with other smaller feature relations). Recently data engines are required to be able to process complex queries including cyclic-queries on huge tables either for analytics or for analyzing graphs for networks. 
+Example of a query is the triangle, which does a self-join two times on a relational table. A traditional DBMS would evaluate this query by doing one join first and then another join of the initial table with the intermediate result. Recent work though by [**Ngo and Veldhuizen**] and [**Afrati and Ulmann**] presented algorithms that evaluate multi-join queries, eliminating requirement for huge intermediate results. The work by **Afrati** was later extended by [**Bearne et al**] who named that algorithm HyperCube and proved it was optimal, but its proof was not practical in a real scenario since it assumed that we can have fractional number of servers. Last year, Suciu et al [**From theory to practice**] provided a refinement of the algorithm that does not depend on fractional servers, thus making it practical, and showed that for many queries it can significantly reduce the amount of data communicated during query processing. 
 
+We will explain briefly the idea behind HyperCube which is used in our serializer during distributed query evaluation. HyperCube is used as the data shuffling algorithm before applying then a multi-way join operator on local data. Therefore, each worker has to receive all the data he needs to evaluate the multi-way join without affecting the result and at the same time keeping the single communication round.
 
+We will use an example scenario to explain the algorithm.
+
+We have a cluster of 8 nodes and our database consists of four relations, _R(A, B), U(A, C), T(B, D), S(C, D)_ and we want to evaluate the following conjunctive query:
+```
+Q(A, B, C) = R and U and T and S
+```
+
+We need to find _ND_ factors that their product equals _P_ (how to find these factors is out of this project's scope and can be found in the aforementioned work, but it suffices to say that usually _ND_ depends on the number of join-attributes). We name these factors _pi_, with _i_ ranging from 1 to _ND_, thus we have _P = p1 x p2 x ... x pND_.
+
+Let us use _ND_ = 3 and all factors equal to two (p1 = p2 = p3 = 2), hence we say that we have three dimensions and each dimensions size of two.
+
+Our cluster of nodes is modelled into a virtual hypercube which has _ND_ dimensions and in each dimension it has the respective _pi_ size. Each node represents a point in this hypercube and is identified by a vector of _ND_ values, one in each dimension. In our example, our cluster is formed as the hypercube illustrated in **Figure X.R**, also showing the node IDs based on their position in the hypercube. 
+
+![alt text][hc-cluster]
+[hc-cluster]: hc-cluster.png "Cluster of 8 nodes in HyperCube formation."
+**Figure X.x - cluster of 8 nodes in HyperCube formation**
 
 ### Bit Serializer HyperCube
 
@@ -22,7 +41,6 @@ Before explaining the arguments of the algorithm we explain some important topic
 ![alt text][hc-ftree-example]
 [hc-ftree-example]: hc-ftree-example.png "Example f-tree"
 **Figure X.1 - a simple factorization tree.**
-
 
 This f-tree has five attributes, and each attribute internally gets an ID ranging from zero to (N-1), where N in this case equals five. Assume that the IDs for these attributes are as below:
 
