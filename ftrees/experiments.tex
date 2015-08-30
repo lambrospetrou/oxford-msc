@@ -1,0 +1,117 @@
+{\color{red}{\bf MAIN GOAL}: get a first distributed prototype working.}
+
+
+\section{Experiments}
+There are four components of the experiments:
+
+$\bullet$ Finding good factorized joins (Section~\ref{sec:experiments:cost:ftree})
+
+$\bullet$ Serialization of factorized joins (Section~\ref{sec:experiments:compression}) cf.\ mail Dan 20 July.
+
+$\bullet$ Distribution -- Communication cost (Section~\ref{sec:experiments:communication:cost}) cf.\ last meeting, \todo{this part is due by 10 August}.
+
+$\bullet$ Distribution -- Total time (Section~\ref{sec:experiments:time})
+
+\medskip
+
+We need the FastRat for 1,2, and 4 (since we want to measure time), while for 3 we can do locally or on the LazyBoy.
+
+\todo{}Take README.md instructions to build and install boost and its dependencies so it would be nice if you tried it at least once to make sure that FDB actually compiles on machines other than Lambros'.
+
+
+\subsection{Finding good factorized joins}\label{sec:experiments:cost:ftree}
+
+For all our datasets, compute f-trees according to the COST function and compare to the ones inferred by FDB.
+
+
+\subsection{Serialization of factorized joins}\label{sec:experiments:compression}
+\todo{Dan's original quote:}
+
+The chapter will motivate the quest for a space-conscious serialization and will point out that the current version of FDB is catastrophic in that the benefits of factorization are largely offset by its fat data structure (I know this dramatizes more than needed, but it should be OK to make the point in the thesis). It will go on explaining how the de/serialization works and give the algorithms.
+
+We could show the behaviour of your compression approach for both size (bytes or number of singletons as pointed out below) and time performance: 
+
+** [singleton-fact] number of singletons for factorized join;
+
+** [singleton-flat] number of singletons for flat join;
+
+The compression ratio of the two above would serve as baseline for the rest. We already have this for all datasets used by Max, but you should report it nevertheless.
+
+** [boost-fact] boost serialization for factorized join; 
+
+** [plain-fact] plain serialization without compression for factorized join;
+ 
+** [lambdist-fact] serialization with compression for factorized join; 
+
+** [b/zip-boost-fact, b/zip-plain-fact, b/zip-lambdist-fact] the above three but also with gzip and bzip2 on them; 
+
+** [plain-flat] plain serialization without compression for flat join; I am not sure you can do boost for this as well;
+
+** [b/zip-plain-flat] as above.
+
+For the factorized join, you will of course use the nest ftree you could find using the COST function presented in the previous chapter of your thesis that could be entitled "Finding good factorized joins."
+
+For time performance, you could think about writing to disk or writing over the network. If at all possible, it would be nice to decouple the IO component from the serialization component and do the serialization in memory (if enough blocks are allocated to it) and measure these separately. Then, the issue of how large is the write block would not influence the performance of serialization.
+
+There is a lot to discuss here and give interesting insights into: overhead of encoding the factorization structure vs. no structure as in plain flat; why b/zip can get good compression and when; how we moved the b/zip goodness inside serialization at much lower performance cost.
+
+We would report this for the Housing dataset (original, not Radu's latest hack for Joe), US retailer and some others that we do not have yet such as Twitter, Freebase, etc.
+
+\medskip
+
+\todo{Another important points by Dan:}
+
+[14:47:47] Dan Olteanu: so you need to tap into the right place before and after serialization -- Lambros already did such tests, so the test code might already be in there
+
+[14:48:07] Dan Olteanu: one issue: you need to read the README and install boost on fastrat
+
+[14:48:15] Dan Olteanu: for the flat join:
+
+[14:48:34] Dan Olteanu: since we do not use compression, but plain serialization, we need the following: (1) write a plain serializer that just outputs int after int, no separator; (2) apply bzip2 and zip on it, using the boost framework as done by Lambros in his preliminary tests. This would be our competitor.
+
+[14:50:59] Dan Olteanu: Lambros and Radu: we must clarify the zip competitors. I propose: zip and bzip2, each with two compression flavours, 1 (fastest but worst compression) and 9 (slowest but best compression).
+
+[14:52:14] Dan Olteanu: since I am not sure whether boost supports this, we might need to do this separately, which poses a serious problem -- we would need to write the serialization to disk and then do the compression, which will involve IO and is unfair to the competitors. I therefore suggest you should check whether boost can support the two flavours natively.
+
+
+\subsection{Distribution -- Communication cost}\label{sec:experiments:communication:cost}
+\todo{}
+Let $n$ be the number of nodes. 
+We take $n$ different large factorizations: either we generate $n$, or we partition in $n$ parts a dataset that we already have.
+
+We take a query $Q$ that joins on multiple attributes. 
+Let $m$ be the number of join attributes.
+
+In a simple for loop, for each of the $n$ factorizations, apply hash functions on the $m$ join attributes, compute the {\em overlap} and the {\em communication cost} (in MB) for communicating the data to the other $n-1$ nodes.
+At the end, sum up the communication cost for all $n$ nodes.
+
+\medskip
+
+{\bf Parameters:}
+\begin{itemize}
+\item The type of serialization that we use for the communication format.
+Also compare against the standard flat representation.
+
+\item The number of communication rounds: all joins in a single round (hypercube) or one join at a time.
+
+\item The number of hash functions: since we have $n$ nodes and $m$ join attributes, then $n=x_1\times\ldots\times x_m$, where $x_i$ is the number of hash values (aka buckets~\cite{AfUl11}) for the $i^{\mathrm{th}}$ join attribute.
+Study the impact of varying these numbers.
+
+\item Datasets:
+
+$\bullet$ Design our own data generator? 
+Housing is not good since only the postcode is a potential join attribute.
+
+$\bullet$ US retailer: we already have the join result of a query (e.g., the one we used for learning) and now we want to join this result with another table.
+Look for several meaningful queries.
+
+$\bullet$ Triangle query (Twitter/LastFM) -- in particular look at the impact of the multiple rounds of communication and the difference w.r.t.\ the flat communication format).
+
+$\bullet$ Make sure Suciu~\cite{ChBaSu15} doesn't use some other that we can use.
+\end{itemize}
+The scenario from these experiments can be seen as a {\em materialized view} scenario: we have already joined some tables and factorized their result and we want to pose new queries on this factorized result.
+
+
+\subsection{Distribution -- Total time}\label{sec:experiments:time}
+\todo{}
+Same scenarios as in Section~\ref{sec:experiments:communication:cost}, but measure the time, split by components (CPU, network), for different distribution policies...
