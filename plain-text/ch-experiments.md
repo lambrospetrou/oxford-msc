@@ -83,15 +83,28 @@ For the off-memory tests we performed similar steps as in-memory with an extra a
 
 #### Serialization sizes
 
-In this section we will examine the size of the serialization output
+In this section we will examine the size of the serialization output against the flat size of the input factorization (number of tuples). 
 
-**PLOT 1 - Comparison of serialization techniques vs flat**
+The _Flat_ serialization mentioned in the plots is the simplistic serialization of a flat relation into bytes by writing the bytes of each tuple in sequence, thus this is equal to _number of tuples_ times _number of attributes_ times _4 bytes_ if for example all values are of type integer.
+
+Additionally, we used the standard compression algorithms GZIP and BZIP2 to compress both the output serializations and the flat serialization. We incorporated compression in our experiments to investigate if applying these algorithms on the flat serialization would reduce the size close to our serializations, and also we apply them on the factorization serializations to check if there is still improvement to be made regarding value compression. We will use the notation _GZ1_ and  _GZ9_ to denote compressiong using GZIP min (1) and max (9) levels respectively, similarly for BZIP2 compressiong using _BZ1_ and _BZ9_.
+
+**PLOT 1 - Comparison of serialization techniques vs flat (no compressions)**
+
+The first group of plots, **Figure X.HOUSING** and **Figure x.SEARS** shows the size of the flat serialization against the size of the serialization using all three serializers, Simple, Byte and Bit.
+It is obvious, that flat size is getting larger as the Scale factor (s) increases in _Housing_ dataset whereas our serializations do not increase by the same rate. The same can be seen in the _US retailer_ dataset, where again the flat size is several orders of magnitude larger than the factorization serializations.
 
 all three serialization result sizes (raw) vs flat (raw bytes)
 
 **PLOT 2 - Comparison of all serialization techniques (SIMPLE vs BYTE vs BIT)**
 
 all three serializations result size in raw bytes, gzipped max, bziped max
+
+In this group of plots we have all three serializers having also applied GZIP and BZIP2 compression upon their own serializations (both in max compression level).
+
+There are several points worthy of interest here. First of all, we see that _Simple_ serializer without compression generates the largest serialization, as expected. The second largest serialization is using _Byte_ serializer without compression. An interesting fact in _Housing's_ plot is that the Simple serializer with compression algorithms applied generated smaller output than _Byte_, which means that this dataset has a lot to gain from value compression techniques. Even more exciting is that _Bit Serializer_ captured this gain itself and it has the smallest output along with the BZIP2 compressiong algorithm being applied to the serializations. The second plot for _Housing_, see **Figure** compares the best serializer, _Bit_, with flat serialization. Both have GZIP and BZIP2 applied on them and still it is obvious that factorizations are indeed more compressed since even with the compression algorithms applied the flat serialization is several orders of magnitude larger.
+
+In the _US retailer_ plot, 
 
 **PLOT 1 - Comparison of bit serialization vs FLAT**
 
@@ -108,6 +121,11 @@ Additionally, the comparison between the raw serialization sizes and the sizes a
 It would be more beneficial to integrate some compression techniques into the serialization since the standard compression algorithms are slower than us by several factors.
 
 
+
+
+### D-FDB - Distributed query engine for FDB
+
+In this section we will report some results for the distributed query engine developed around FDB. Unfortunately, due to lack of time we were not able to do exchaustive experimental evaluation of the end-to-end system or try complex queries. The current results however, show that there is a lot of improvement to be gain using D-FDB and that it surely is a major step in the development of FDB as a complete database engine.
 
 
 

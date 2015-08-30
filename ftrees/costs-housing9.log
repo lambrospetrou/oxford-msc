@@ -1,0 +1,784 @@
+\input{header.tex}
+\title{Distributed Factorized Databases}
+\begin{document}
+
+
+TREE 1
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{averagesalary}}}
+  {
+    \pstree{\TR{\mathrm{nbbuslines}}}
+    {
+      \pstree{\TR{\mathrm{nbtrainstations}}}
+      {
+        \TR{\mathrm{distancecitycentre}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{house}}}
+  {
+    \pstree{\TR{\mathrm{unknown}}}
+    {
+      \pstree{\TR{\mathrm{parking}}}
+      {
+        \pstree{\TR{\mathrm{nbbedrooms}}}
+        {
+          \pstree{\TR{\mathrm{nbbathrooms}}}
+          {
+            \pstree{\TR{\mathrm{garden}}}
+            {
+              \pstree{\TR{\mathrm{kitchensize}}}
+              {
+                \pstree{\TR{\mathrm{livingarea}}}
+                {
+                  \pstree{\TR{\mathrm{price}}}
+                  {
+                    \TR{\mathrm{flat}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{pricerangerest}}}
+  {
+    \TR{\mathrm{openinghoursrest}}
+  }
+  \pstree{\TR{\mathrm{sainsburys}}}
+  {
+    \pstree{\TR{\mathrm{tesco}}}
+    {
+      \pstree{\TR{\mathrm{ms}}}
+      {
+        \pstree{\TR{\mathrm{pricerangeshop}}}
+        {
+          \TR{\mathrm{openinghoursshop}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{typeeducation}}}
+  {
+    \TR{\mathrm{sizeinstitution}}
+  }
+  \pstree{\TR{\mathrm{unemployment}}}
+  {
+    \pstree{\TR{\mathrm{nbhospitals}}}
+    {
+      \TR{\mathrm{crimesperyear}}
+    }
+  }
+}$
+
+COST: 2.31399e+08
+s(Q): 2
+singletons: 3155710
+
+
+....................................................................
+TREE 2
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{averagesalary}}}
+  {
+    \pstree{\TR{\mathrm{nbbuslines}}}
+    {
+      \pstree{\TR{\mathrm{nbtrainstations}}}
+      {
+        \TR{\mathrm{distancecitycentre}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{house}}}
+  {
+    \pstree{\TR{\mathrm{unknown}}}
+    {
+      \pstree{\TR{\mathrm{parking}}}
+      {
+        \pstree{\TR{\mathrm{nbbedrooms}}}
+        {
+          \pstree{\TR{\mathrm{nbbathrooms}}}
+          {
+            \pstree{\TR{\mathrm{garden}}}
+            {
+              \pstree{\TR{\mathrm{kitchensize}}}
+              {
+                \pstree{\TR{\mathrm{livingarea}}}
+                {
+                  \pstree{\TR{\mathrm{price}}}
+                  {
+                    \TR{\mathrm{flat}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{pricerangerest}}}
+  {
+    \TR{\mathrm{openinghoursrest}}
+  }
+  \pstree{\TR{\mathrm{sainsburys}}}
+  {
+    \pstree{\TR{\mathrm{ms}}}
+    {
+      \pstree{\TR{\mathrm{pricerangeshop}}}
+      {
+        \pstree{\TR{\mathrm{openinghoursshop}}}
+        {
+          \TR{\mathrm{tesco}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{typeeducation}}}
+  {
+    \TR{\mathrm{sizeinstitution}}
+  }
+  \pstree{\TR{\mathrm{unemployment}}}
+  {
+    \pstree{\TR{\mathrm{nbhospitals}}}
+    {
+      \TR{\mathrm{crimesperyear}}
+    }
+  }
+}$
+
+COST: 2.30234e+08
+s(Q): 2
+singletons: 3209447
+
+....................................................................
+TREE 3
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{averagesalary}}}
+  {
+    \pstree{\TR{\mathrm{nbbuslines}}}
+    {
+      \pstree{\TR{\mathrm{nbtrainstations}}}
+      {
+        \TR{\mathrm{distancecitycentre}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{house}}}
+  {
+    \pstree{\TR{\mathrm{flat}}}
+    {
+      \pstree{\TR{\mathrm{unknown}}}
+      {
+        \pstree{\TR{\mathrm{parking}}}
+        {
+          \pstree{\TR{\mathrm{nbbedrooms}}}
+          {
+            \pstree{\TR{\mathrm{nbbathrooms}}}
+            {
+              \pstree{\TR{\mathrm{garden}}}
+              {
+                \pstree{\TR{\mathrm{kitchensize}}}
+                {
+                  \pstree{\TR{\mathrm{livingarea}}}
+                  {
+                    \TR{\mathrm{price}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{pricerangerest}}}
+  {
+    \TR{\mathrm{openinghoursrest}}
+  }
+  \pstree{\TR{\mathrm{sainsburys}}}
+  {
+    \pstree{\TR{\mathrm{tesco}}}
+    {
+      \pstree{\TR{\mathrm{ms}}}
+      {
+        \pstree{\TR{\mathrm{pricerangeshop}}}
+        {
+          \TR{\mathrm{openinghoursshop}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{sizeinstitution}}}
+  {
+    \TR{\mathrm{typeeducation}}
+  }
+  \pstree{\TR{\mathrm{unemployment}}}
+  {
+    \pstree{\TR{\mathrm{nbhospitals}}}
+    {
+      \TR{\mathrm{crimesperyear}}
+    }
+  }
+}$
+
+COST: 3.50657e+07
+s(Q): 2
+singletons: 3087144
+
+....................................................
+TREE 4
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{averagesalary}}}
+  {
+    \pstree{\TR{\mathrm{nbbuslines}}}
+    {
+      \pstree{\TR{\mathrm{nbtrainstations}}}
+      {
+        \TR{\mathrm{distancecitycentre}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{house}}}
+  {
+    \pstree{\TR{\mathrm{flat}}}
+    {
+      \pstree{\TR{\mathrm{unknown}}}
+      {
+        \pstree{\TR{\mathrm{parking}}}
+        {
+          \pstree{\TR{\mathrm{nbbedrooms}}}
+          {
+            \pstree{\TR{\mathrm{nbbathrooms}}}
+            {
+              \pstree{\TR{\mathrm{garden}}}
+              {
+                \pstree{\TR{\mathrm{kitchensize}}}
+                {
+                  \pstree{\TR{\mathrm{livingarea}}}
+                  {
+                    \TR{\mathrm{price}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{openinghoursrest}}}
+  {
+    \TR{\mathrm{pricerangerest}}
+  }
+  \pstree{\TR{\mathrm{sainsburys}}}
+  {
+    \pstree{\TR{\mathrm{tesco}}}
+    {
+      \pstree{\TR{\mathrm{ms}}}
+      {
+        \pstree{\TR{\mathrm{pricerangeshop}}}
+        {
+          \TR{\mathrm{openinghoursshop}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{typeeducation}}}
+  {
+    \TR{\mathrm{sizeinstitution}}
+  }
+  \pstree{\TR{\mathrm{unemployment}}}
+  {
+    \pstree{\TR{\mathrm{nbhospitals}}}
+    {
+      \TR{\mathrm{crimesperyear}}
+    }
+  }
+}$
+
+
+COST: 3.50106e+07
+s(Q): 2
+singletons: 3129942
+.............................................................
+
+TREE 5
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{averagesalary}}}
+  {
+    \pstree{\TR{\mathrm{nbbuslines}}}
+    {
+      \pstree{\TR{\mathrm{nbtrainstations}}}
+      {
+        \TR{\mathrm{distancecitycentre}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{house}}}
+  {
+    \pstree{\TR{\mathrm{flat}}}
+    {
+      \pstree{\TR{\mathrm{unknown}}}
+      {
+        \pstree{\TR{\mathrm{parking}}}
+        {
+          \pstree{\TR{\mathrm{nbbedrooms}}}
+          {
+            \pstree{\TR{\mathrm{nbbathrooms}}}
+            {
+              \pstree{\TR{\mathrm{garden}}}
+              {
+                \pstree{\TR{\mathrm{kitchensize}}}
+                {
+                  \pstree{\TR{\mathrm{livingarea}}}
+                  {
+                    \TR{\mathrm{price}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{nbhospitals}}}
+  {
+    \pstree{\TR{\mathrm{unemployment}}}
+    {
+      \TR{\mathrm{crimesperyear}}
+    }
+  }
+  \pstree{\TR{\mathrm{pricerangerest}}}
+  {
+    \TR{\mathrm{openinghoursrest}}
+  }
+  \pstree{\TR{\mathrm{sainsburys}}}
+  {
+    \pstree{\TR{\mathrm{tesco}}}
+    {
+      \pstree{\TR{\mathrm{ms}}}
+      {
+        \pstree{\TR{\mathrm{pricerangeshop}}}
+        {
+          \TR{\mathrm{openinghoursshop}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{typeeducation}}}
+  {
+    \TR{\mathrm{sizeinstitution}}
+  }
+}$
+
+COST: 3.50595e+07
+s(Q): 2
+singletons: 3081014
+
+..................................................................
+
+TREE 6
+
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{averagesalary}}}
+  {
+    \pstree{\TR{\mathrm{nbbuslines}}}
+    {
+      \pstree{\TR{\mathrm{nbtrainstations}}}
+      {
+        \TR{\mathrm{distancecitycentre}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{crimesperyear}}}
+  {
+    \pstree{\TR{\mathrm{nbhospitals}}}
+    {
+      \TR{\mathrm{unemployment}}
+    }
+  }
+  \pstree{\TR{\mathrm{house}}}
+  {
+    \pstree{\TR{\mathrm{flat}}}
+    {
+      \pstree{\TR{\mathrm{unknown}}}
+      {
+        \pstree{\TR{\mathrm{parking}}}
+        {
+          \pstree{\TR{\mathrm{nbbedrooms}}}
+          {
+            \pstree{\TR{\mathrm{nbbathrooms}}}
+            {
+              \pstree{\TR{\mathrm{garden}}}
+              {
+                \pstree{\TR{\mathrm{kitchensize}}}
+                {
+                  \pstree{\TR{\mathrm{livingarea}}}
+                  {
+                    \TR{\mathrm{price}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{pricerangerest}}}
+  {
+    \TR{\mathrm{openinghoursrest}}
+  }
+  \pstree{\TR{\mathrm{sainsburys}}}
+  {
+    \pstree{\TR{\mathrm{tesco}}}
+    {
+      \pstree{\TR{\mathrm{ms}}}
+      {
+        \pstree{\TR{\mathrm{pricerangeshop}}}
+        {
+          \TR{\mathrm{openinghoursshop}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{typeeducation}}}
+  {
+    \TR{\mathrm{sizeinstitution}}
+  }
+}$
+
+COST: 3.50595e+07
+s(Q): 2
+singletons: 3081014
+
+
+.......................................................
+
+TREE 7
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{house}}}
+  {
+    \pstree{\TR{\mathrm{flat}}}
+    {
+      \pstree{\TR{\mathrm{unknown}}}
+      {
+        \pstree{\TR{\mathrm{parking}}}
+        {
+          \pstree{\TR{\mathrm{nbbedrooms}}}
+          {
+            \pstree{\TR{\mathrm{nbbathrooms}}}
+            {
+              \pstree{\TR{\mathrm{garden}}}
+              {
+                \pstree{\TR{\mathrm{kitchensize}}}
+                {
+                  \pstree{\TR{\mathrm{livingarea}}}
+                  {
+                    \TR{\mathrm{price}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{nbbuslines}}}
+  {
+    \pstree{\TR{\mathrm{averagesalary}}}
+    {
+      \pstree{\TR{\mathrm{nbtrainstations}}}
+      {
+        \TR{\mathrm{distancecitycentre}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{pricerangerest}}}
+  {
+    \TR{\mathrm{openinghoursrest}}
+  }
+  \pstree{\TR{\mathrm{sainsburys}}}
+  {
+    \pstree{\TR{\mathrm{tesco}}}
+    {
+      \pstree{\TR{\mathrm{ms}}}
+      {
+        \pstree{\TR{\mathrm{pricerangeshop}}}
+        {
+          \TR{\mathrm{openinghoursshop}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{typeeducation}}}
+  {
+    \TR{\mathrm{sizeinstitution}}
+  }
+  \pstree{\TR{\mathrm{unemployment}}}
+  {
+    \pstree{\TR{\mathrm{nbhospitals}}}
+    {
+      \TR{\mathrm{crimesperyear}}
+    }
+  }
+}$
+
+COST: 3.50595e+07
+s(Q): 2
+singletons: 3081014
+
+....................................................
+
+TREE 8
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{averagesalary}}}
+  {
+    \pstree{\TR{\mathrm{nbbuslines}}}
+    {
+      \pstree{\TR{\mathrm{nbtrainstations}}}
+      {
+        \TR{\mathrm{distancecitycentre}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{price}}}
+  {
+    \pstree{\TR{\mathrm{livingarea}}}
+    {
+      \pstree{\TR{\mathrm{kitchensize}}}
+      {
+        \pstree{\TR{\mathrm{garden}}}
+        {
+          \pstree{\TR{\mathrm{nbbathrooms}}}
+          {
+            \pstree{\TR{\mathrm{nbbedrooms}}}
+            {
+              \pstree{\TR{\mathrm{parking}}}
+              {
+                \pstree{\TR{\mathrm{unknown}}}
+                {
+                  \pstree{\TR{\mathrm{flat}}}
+                  {
+                    \TR{\mathrm{house}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{pricerangerest}}}
+  {
+    \TR{\mathrm{openinghoursrest}}
+  }
+  \pstree{\TR{\mathrm{sainsburys}}}
+  {
+    \pstree{\TR{\mathrm{tesco}}}
+    {
+      \pstree{\TR{\mathrm{ms}}}
+      {
+        \pstree{\TR{\mathrm{pricerangeshop}}}
+        {
+          \TR{\mathrm{openinghoursshop}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{typeeducation}}}
+  {
+    \TR{\mathrm{sizeinstitution}}
+  }
+  \pstree{\TR{\mathrm{unemployment}}}
+  {
+    \pstree{\TR{\mathrm{nbhospitals}}}
+    {
+      \TR{\mathrm{crimesperyear}}
+    }
+  }
+}$
+COST: 1.82231e+08
+s(Q): 2
+singletons: 3485272
+
+...............................................
+
+TREE 9
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{averagesalary}}}
+  {
+    \pstree{\TR{\mathrm{nbbuslines}}}
+    {
+      \pstree{\TR{\mathrm{nbtrainstations}}}
+      {
+        \TR{\mathrm{distancecitycentre}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{house}}}
+  {
+    \pstree{\TR{\mathrm{flat}}}
+    {
+      \pstree{\TR{\mathrm{unknown}}}
+      {
+        \pstree{\TR{\mathrm{parking}}}
+        {
+          \pstree{\TR{\mathrm{nbbedrooms}}}
+          {
+            \pstree{\TR{\mathrm{nbbathrooms}}}
+            {
+              \pstree{\TR{\mathrm{garden}}}
+              {
+                \pstree{\TR{\mathrm{kitchensize}}}
+                {
+                  \pstree{\TR{\mathrm{livingarea}}}
+                  {
+                    \TR{\mathrm{price}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{openinghoursshop}}}
+  {
+    \pstree{\TR{\mathrm{pricerangeshop}}}
+    {
+      \pstree{\TR{\mathrm{ms}}}
+      {
+        \pstree{\TR{\mathrm{tesco}}}
+        {
+          \TR{\mathrm{sainsburys}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{pricerangerest}}}
+  {
+    \TR{\mathrm{openinghoursrest}}
+  }
+  \pstree{\TR{\mathrm{typeeducation}}}
+  {
+    \TR{\mathrm{sizeinstitution}}
+  }
+  \pstree{\TR{\mathrm{unemployment}}}
+  {
+    \pstree{\TR{\mathrm{nbhospitals}}}
+    {
+      \TR{\mathrm{crimesperyear}}
+    }
+  }
+}$
+
+COST: 3.21316e+07
+s(Q): 2
+singletons: 3437312
+
+..............................................................
+
+TREE 10
+
+$\pstree{\TR{\mathrm{postcode}}}
+{
+  \pstree{\TR{\mathrm{distancecitycentre}}}
+  {
+    \pstree{\TR{\mathrm{nbtrainstations}}}
+    {
+      \pstree{\TR{\mathrm{nbbuslines}}}
+      {
+        \TR{\mathrm{averagesalary}}
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{price}}}
+  {
+    \pstree{\TR{\mathrm{livingarea}}}
+    {
+      \pstree{\TR{\mathrm{kitchensize}}}
+      {
+        \pstree{\TR{\mathrm{garden}}}
+        {
+          \pstree{\TR{\mathrm{nbbathrooms}}}
+          {
+            \pstree{\TR{\mathrm{nbbedrooms}}}
+            {
+              \pstree{\TR{\mathrm{parking}}}
+              {
+                \pstree{\TR{\mathrm{unknown}}}
+                {
+                  \pstree{\TR{\mathrm{flat}}}
+                  {
+                    \TR{\mathrm{house}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{pricerangerest}}}
+  {
+    \TR{\mathrm{openinghoursrest}}
+  }
+  \pstree{\TR{\mathrm{sainsburys}}}
+  {
+    \pstree{\TR{\mathrm{tesco}}}
+    {
+      \pstree{\TR{\mathrm{ms}}}
+      {
+        \pstree{\TR{\mathrm{pricerangeshop}}}
+        {
+          \TR{\mathrm{openinghoursshop}}
+        }
+      }
+    }
+  }
+  \pstree{\TR{\mathrm{typeeducation}}}
+  {
+    \TR{\mathrm{sizeinstitution}}
+  }
+  \pstree{\TR{\mathrm{unemployment}}}
+  {
+    \pstree{\TR{\mathrm{nbhospitals}}}
+    {
+      \TR{\mathrm{crimesperyear}}
+    }
+  }
+}$
+COST: 1.82231e+08
+s(Q): 2
+singletons: 3485272
+
+
+
+\end{document}
