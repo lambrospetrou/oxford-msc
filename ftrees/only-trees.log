@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.5-0.9999.3 (TeX Live 2013/Debian) (format=xelatex 2015.7.28)  30 AUG 2015 11:27
+This is XeTeX, Version 3.1415926-2.5-0.9999.3 (TeX Live 2013/Debian) (format=xelatex 2015.7.28)  30 AUG 2015 11:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -939,7 +939,7 @@ File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 LaTeX Font Info:    Try loading font information for U+stmry on input line 8.
 
 (/usr/share/texlive/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
-Overfull \hbox (190.93655pt too wide) in paragraph at lines 8--77
+Overfull \hbox (190.93655pt too wide) in paragraph at lines 8--78
 []$[]$ 
  []
 
@@ -947,7 +947,7 @@ Overfull \hbox (190.93655pt too wide) in paragraph at lines 8--77
 
 
 ]
-Overfull \hbox (211.7121pt too wide) in paragraph at lines 86--155
+Overfull \hbox (211.7121pt too wide) in paragraph at lines 87--156
 []$[]$ 
  []
 
@@ -955,7 +955,7 @@ Overfull \hbox (211.7121pt too wide) in paragraph at lines 86--155
 
 
 ]
-Overfull \hbox (211.7121pt too wide) in paragraph at lines 162--231
+Overfull \hbox (211.7121pt too wide) in paragraph at lines 163--232
 []$[]$ 
  []
 
@@ -963,7 +963,7 @@ Overfull \hbox (211.7121pt too wide) in paragraph at lines 162--231
 
 
 ]
-Overfull \hbox (190.77893pt too wide) in paragraph at lines 238--307
+Overfull \hbox (190.77893pt too wide) in paragraph at lines 239--308
 []$[]$ 
  []
 
@@ -971,7 +971,7 @@ Overfull \hbox (190.77893pt too wide) in paragraph at lines 238--307
 
 
 ]
-Overfull \hbox (201.64069pt too wide) in paragraph at lines 314--383
+Overfull \hbox (201.64069pt too wide) in paragraph at lines 315--384
 []$[]$ 
  []
 
@@ -979,7 +979,7 @@ Overfull \hbox (201.64069pt too wide) in paragraph at lines 314--383
 
 
 ]
-Overfull \hbox (200.75905pt too wide) in paragraph at lines 392--461
+Overfull \hbox (200.75905pt too wide) in paragraph at lines 393--462
 []$[]$ 
  []
 
@@ -987,7 +987,7 @@ Overfull \hbox (200.75905pt too wide) in paragraph at lines 392--461
 
 
 ]
-Overfull \hbox (188.1845pt too wide) in paragraph at lines 470--539
+Overfull \hbox (188.1845pt too wide) in paragraph at lines 471--540
 []$[]$ 
  []
 
@@ -995,7 +995,7 @@ Overfull \hbox (188.1845pt too wide) in paragraph at lines 470--539
 
 
 ]
-Overfull \hbox (201.7087pt too wide) in paragraph at lines 548--617
+Overfull \hbox (201.7087pt too wide) in paragraph at lines 549--618
 []$[]$ 
  []
 
@@ -1003,7 +1003,7 @@ Overfull \hbox (201.7087pt too wide) in paragraph at lines 548--617
 
 
 ]
-Overfull \hbox (204.79861pt too wide) in paragraph at lines 625--694
+Overfull \hbox (204.79861pt too wide) in paragraph at lines 626--695
 []$[]$ 
  []
 
@@ -1011,7 +1011,7 @@ Overfull \hbox (204.79861pt too wide) in paragraph at lines 625--694
 
 
 ]
-Overfull \hbox (225.7815pt too wide) in paragraph at lines 701--770
+Overfull \hbox (225.7815pt too wide) in paragraph at lines 702--771
 []$[]$ 
  []
 
@@ -1019,20 +1019,20 @@ Overfull \hbox (225.7815pt too wide) in paragraph at lines 701--770
 
 
 ]
-Overfull \hbox (202.5976pt too wide) in paragraph at lines 778--847
+Overfull \hbox (202.5976pt too wide) in paragraph at lines 779--848
 []$[]$ 
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 850.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 851.
 [11
 
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 850.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 851.
  (./only-trees.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 850.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 850.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 850.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 851.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 851.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 851.
  ) 
 Here is how much of TeX's memory you used:
  23219 strings out of 493918
@@ -1041,6 +1041,6 @@ Here is how much of TeX's memory you used:
  26115 multiletter control sequences out of 15000+600000
  37491 words of font info for 53 fonts, out of 8000000 for 9000
  1144 hyphenation exceptions out of 8191
- 58i,35n,69p,648b,851s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 58i,35n,69p,648b,995s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on only-trees.pdf (11 pages).
