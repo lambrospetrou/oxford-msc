@@ -102,7 +102,7 @@ all three serializations result size in raw bytes, gzipped max, bziped max
 
 In this group of plots we have all three serializers having also applied GZIP and BZIP2 compression upon their own serializations (both in max compression level).
 
-There are several points worthy of interest here. First of all, we see that _Simple_ serializer without compression generates the largest serialization, as expected. The second largest serialization is using _Byte_ serializer without compression. An interesting fact in _Housing's_ plot is that the Simple serializer with compression algorithms applied generated smaller output than _Byte_, which means that this dataset has a lot to gain from value compression techniques. Even more exciting is that _Bit Serializer_ captured this gain itself and it has the smallest output along with the BZIP2 compressiong algorithm being applied to the serializations. The second plot for _Housing_, see **Figure ** compares the best serializer, _Bit_, with flat serialization. Both have GZIP and BZIP2 applied on them and still it is obvious that factorizations are indeed more compressed since even with the compression algorithms applied the flat serialization is several orders of magnitude larger.
+There are several points worthy of interest here. First of all, we see that _Simple_ serializer without compression generates the largest serialization, as expected. The second largest serialization is using _Byte_ serializer without compression. An interesting fact in _Housing's_ plot is that the Simple serializer with compression algorithms applied generated smaller output than _Byte_, which means that this dataset has a lot to gain from value compression techniques. Even more exciting is that _Bit Serializer_ captured this gain itself and it has the smallest output along with the BZIP2 compressiong algorithm being applied to the serializations. The second plot for _Housing_, see **Figure** compares the best serializer, _Bit_, with flat serialization. Both have GZIP and BZIP2 applied on them and still it is obvious that factorizations are indeed more compressed since even with the compression algorithms applied the flat serialization is several orders of magnitude larger.
 
 In the _US retailer_ plot, 
 
@@ -121,6 +121,11 @@ Additionally, the comparison between the raw serialization sizes and the sizes a
 It would be more beneficial to integrate some compression techniques into the serialization since the standard compression algorithms are slower than us by several factors.
 
 
+
+
+### D-FDB - Distributed query engine for FDB
+
+In this section we will report some results for the distributed query engine developed around FDB. Unfortunately, due to lack of time we were not able to do exchaustive experimental evaluation of the end-to-end system or try complex queries. The current results however, show that there is a lot of improvement to be gain using D-FDB and that it surely is a major step in the development of FDB as a complete database engine.
 
 
 
